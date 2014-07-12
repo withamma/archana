@@ -1,6 +1,6 @@
 <div class="question-container">
-  <div class="item previous" ng-hide="state === 'end'"><p class="noselect" data-fittext=".315" data-fittext-min="12" data-fittext-max="50">{{linkPrevious()}}</p></div>
-  <div class="item test" ng-hide="state === 'end'"><p class="noselect" data-fittext=".315" data-fittext-min="12" data-fittext-max="50">{{linkTest()}}</div>
+  <div class="item previous" ng-hide="state === 'end'"><p class="noselect" data-fittext=".315" data-fittext-min="24px" data-fittext-max="50">{{linkPrevious()}}</p></div>
+  <div class="item test" ng-hide="state === 'end'"><p class="noselect" data-fittext=".315" data-fittext-min="24px" data-fittext-max="50">{{linkTest()}}</div>
 </div>
 <img src="img/creator.jpg" width="100%" alt="Finished" ng-click="showResults()" ng-show="state === 'end'">
 <div class="controls-container">
