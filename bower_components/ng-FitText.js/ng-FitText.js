@@ -15,9 +15,9 @@
 
 angular.module( 'ngFitText', [] )
   .value( 'config', {
-    'debounce': false,
+    'debounce': true,
     'delay': 250,
-    'min': undefined,
+    'min': 12,
     'max': undefined
   })
 

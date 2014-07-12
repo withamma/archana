@@ -2,7 +2,7 @@
   <h3 class="modal-title">Things you need to work on:</h3>
   <ul>
     <li ng-repeat="item in incorrect">
-      {{ item.previous }} -> {{ item.next }}
+      <span class="largeFont">{{ item.previous }} -> {{ item.next }}</span>
     </li>
   </ul>
   <h2>Export to Quizlet [Coming soon]</h2>
