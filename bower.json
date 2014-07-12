@@ -1,0 +1,36 @@
+{
+  "name": "Learn in a line",
+  "version": "0.0.1",
+  "authors": [
+    "Harsh Singh <hisingh1@gmail.com>"
+  ],
+  "description": "Learn things that do in order",
+  "main": "amma.coffee",
+  "keywords": [
+    "amma",
+    "108",
+    "1000",
+    "names",
+    "learn",
+    "linear",
+    "line",
+    "quick",
+    "memorize",
+    "quiz",
+    "test",
+    "quizlet"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ng-FitText.js": "~2.4.0",
+    "ngstorage": "~0.3.0"
+  }
+}

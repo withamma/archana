@@ -1,0 +1,10 @@
+<div class="container-fluid">
+  <h3 class="modal-title">Things you need to work on:</h3>
+  <ul>
+    <li ng-repeat="item in incorrect">
+      {{ item.previous }} -> {{ item.next }}
+    </li>
+  </ul>
+  <h2>Export to Quizlet [Coming soon]</h2>
+  <img src="img/cover-smile.jpg"  width="100%" alt="">
+</div>

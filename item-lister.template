@@ -1,6 +1,6 @@
 <div class="container-fluid">
-  <h1>Learn something!</h1>
   <div class="col-md-10">
+  <h1>Learn something!</h1>
     <!--Body content-->
     <ul class="learningItems">
       <li ng-repeat="item in items" class="thumbnail">
@@ -10,14 +10,16 @@
       </li>
     </ul>
   </div>
-  <h2>Coming soon</h2>
-  <pre>
-    1000 Names of Devi
-    Sanskrit version of 108 + 1000 names
-    Feedback page (for now email hisingh1@gmail.com)
-    Better look
-    Export the missed results to quizlet
-    Export the missed results to anki
-    Code on github
-  </pre>
+  <div class="col-md-2">
+    <h2>Coming soon</h2>
+    <ul>
+      <li>1000 Names of Devi</li>
+      <li>Sanskrit version of 108 + 1000 names</li>
+      <li>Feedback page (for now email hisingh1@gmail.com)</li>
+      <li>Better look</li>
+      <li>Export the missed results to quizlet</li>
+      <li>Export the missed results to anki</li>
+      <li>Code on github</li>
+    </ul>
+  </div>
 </div>
