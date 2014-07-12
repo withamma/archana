@@ -6,8 +6,8 @@
 <div class="controls-container">
   <div class="controls">
     <div class="show" ng-show="state === 'show'" ng-click="showAnswer()"><p class="noselect" data-fittext >Show Answer</p></div>
-    <div id="incorrect" ng-show="state === 'answer'" ng-click="submitAnswer('incorrect')"><p class="noselect" data-fittext >Incorrect</p></div>
+    <div id="incorrect" ng-show="state === 'answer'" ng-click="submitAnswer('incorrect')"><p class="noselect" data-fittext data-fittext-min="12px">Incorrect</p></div>
     <div id="correct" ng-show="state === 'answer'" ng-click="submitAnswer('correct')"><p class="noselect" data-fittext >Correct</p></div>
-    <div class="show" ng-show="state === 'end'" ng-click="showResults()"><p class="noselect" data-fittext >Show Results</p></div>
+    <div class="show" ng-show="state === 'end'" ng-click="showResults()"><p class="noselect" data-fittext data-fittext-min="12px">Show Results</p></div>
   </div>
 </div>
