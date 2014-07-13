@@ -1,4 +1,7 @@
-<div class="container-fluid">
+<div class="results-bg" data-bg="img/cover-smile.jpg"></div>
+<div class="overlay" ng-hide="state === 'end'"> </div>
+
+<div class="container-fluid results">
   <h3 class="modal-title">Things you need to work on:</h3>
   <ul>
     <li ng-repeat="item in incorrect">
@@ -6,5 +9,4 @@
     </li>
   </ul>
   <h2>Export to Quizlet [Coming soon]</h2>
-  <img src="img/cover-smile.jpg"  width="100%" alt="">
 </div>

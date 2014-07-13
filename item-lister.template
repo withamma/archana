@@ -12,14 +12,15 @@
   </div>
   <div class="col-md-2">
     <h2>Coming soon</h2>
-    <ul>
+    <ol>
       <li>1000 Names of Devi</li>
-      <li>Sanskrit version of 108 + 1000 names</li>
-      <li>Feedback page (for now email hisingh1@gmail.com)</li>
       <li>Better look</li>
+      <li>Meanings in 108 names</li>
+      <li>Feedback page (for now email hisingh1@gmail.com)</li>
       <li>Export the missed results to quizlet</li>
       <li>Export the missed results to anki</li>
+      <li>FAQ page</li>
       <li>Code on github</li>
-    </ul>
+    </ol>
   </div>
 </div>

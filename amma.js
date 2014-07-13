@@ -27,7 +27,7 @@ app.controller("ItemListerCtrl", [
 ]);
 
 app.controller("MemorizeCtrl", [
-  "$scope", '$routeParams', '$http', "$location", '$localStorage', function($scope, $routeParams, $http, $location, storage) {
+  "$scope", '$routeParams', '$http', "$location", '$localStorage', '$sce', function($scope, $routeParams, $http, $location, storage, $sce) {
     var id, incorrect, log, nextState;
     id = "" + $routeParams.itemId;
     $scope.state = "loading";
@@ -76,20 +76,30 @@ app.controller("MemorizeCtrl", [
     };
     $scope.linkPrevious = function() {
       if ($scope.state !== "loading") {
-        return $scope.listToLearn[$scope.currentPosition];
+        return $sce.trustAsHtml($scope.listToLearn[$scope.currentPosition]);
       } else {
-        return "Loading";
+        return $sce.trustAsHtml("Loading");
       }
     };
     $scope.linkTest = function() {
       if ($scope.state === "answer") {
-        return $scope.listToLearn[$scope.currentPosition + 1];
+        return $sce.trustAsHtml($scope.listToLearn[$scope.currentPosition + 1]);
       } else {
-        return "?";
+        return $sce.trustAsHtml("?");
       }
     };
-    return $scope.showResults = function() {
+    $scope.showResults = function() {
       return $location.path("results/" + id);
+    };
+    return $scope.restart = function() {
+      storage[id] = {};
+      storage[id]["currentPosition"] = 0;
+      storage[id]["log"] = {};
+      storage[id]["incorrect"] = [];
+      $scope.currentPosition = storage[id]["currentPosition"];
+      log = storage[id]["log"];
+      incorrect = storage[id]["incorrect"];
+      return $scope.state = "show";
     };
   }
 ]);

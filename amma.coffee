@@ -23,7 +23,7 @@ app.controller "ItemListerCtrl", ["$scope", "$http", ($scope, $http) ->
     $scope.items = data
 ]
  
-app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", '$localStorage', ($scope, $routeParams, $http, $location, storage) ->
+app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", '$localStorage', '$sce', ($scope, $routeParams, $http, $location, storage, $sce) ->
   id = "#{$routeParams.itemId}"
   $scope.state = "loading"
 
@@ -71,13 +71,23 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
     nextState()
 
   $scope.linkPrevious = () ->
-    if ($scope.state isnt "loading") then $scope.listToLearn[$scope.currentPosition] else "Loading"
+    if ($scope.state isnt "loading") then $sce.trustAsHtml($scope.listToLearn[$scope.currentPosition]) else $sce.trustAsHtml("Loading")
 
   $scope.linkTest = () ->
-    if ($scope.state is "answer") then $scope.listToLearn[$scope.currentPosition + 1] else "?"
+    if ($scope.state is "answer") then $sce.trustAsHtml($scope.listToLearn[$scope.currentPosition + 1]) else $sce.trustAsHtml("?")
 
   $scope.showResults = () ->
     $location.path "results/#{id}"
+
+  $scope.restart = () ->
+    storage[id] = {}
+    storage[id]["currentPosition"] = 0
+    storage[id]["log"] = {}
+    storage[id]["incorrect"] = []
+    $scope.currentPosition = storage[id]["currentPosition"]
+    log = storage[id]["log"]
+    incorrect = storage[id]["incorrect"]
+    $scope.state = "show"
 
 ]
 
