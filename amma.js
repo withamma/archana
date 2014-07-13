@@ -18,6 +18,12 @@ app.config(function($routeProvider) {
   });
 });
 
+app.controller("NavBarCtrl", [
+  "$scope", function($scope) {
+    return $scope.isCollapsed = true;
+  }
+]);
+
 app.controller("ItemListerCtrl", [
   "$scope", "$http", function($scope, $http) {
     return $http.get("learning-items.json").success(function(data) {
@@ -55,6 +61,7 @@ app.controller("MemorizeCtrl", [
         return $scope.state = "show";
       } else {
         $scope.state = "end";
+        new Audio("sounds/victory_fanfare.mp3").play();
         return storage[id]["currentPosition"] = 0;
       }
     };
@@ -105,9 +112,28 @@ app.controller("MemorizeCtrl", [
 ]);
 
 app.controller("ResultsCtrl", [
-  "$scope", "$localStorage", '$routeParams', function($scope, $localStorage, $routeParams) {
-    var id;
+  "$scope", "$localStorage", '$routeParams', '$http', 'dateFilter', function($scope, storage, $routeParams, $http, dateFilter) {
+    var id, today;
     id = "" + $routeParams.itemId;
-    return $scope.incorrect = $localStorage[id]["incorrect"];
+    $scope.incorrect = storage[id]["incorrect"];
+    $scope.exportQuizlet = function() {
+      return $http.post("https://api.quizlet.com/2.0/sets", {
+        "title": id + today(),
+        "terms": $scope.incorrect.map(function(term) {
+          return term.previous;
+        }),
+        "definitions": $scope.incorrect.map(function(term) {
+          return term.next;
+        }),
+        "lang_terms": "en",
+        "lang_definitions": "en",
+        "allow_discussion": 0
+      }).success(function(data) {
+        return console.log(data);
+      });
+    };
+    return today = function() {
+      return dateFilter(new Date(), "MMM dd yyyy");
+    };
   }
 ]);

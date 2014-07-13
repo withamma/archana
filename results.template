@@ -8,5 +8,5 @@
       <span class="largeFont">{{ item.previous }} -> {{ item.next }}</span>
     </li>
   </ul>
-  <h2>Export to Quizlet [Coming soon]</h2>
+<button type="button" class="btn btn-lg btn-success" ng-click="exportQuizlet()">Export to Quizlet</button>
 </div>

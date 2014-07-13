@@ -1,26 +1,28 @@
 <div class="container-fluid">
-  <div class="col-md-10">
-  <h1>Learn something!</h1>
-    <!--Body content-->
-    <ul class="learningItems">
-      <li ng-repeat="item in items" class="thumbnail">
-        <a href="#/memorize/{{item.id}}" class="thumb"><img ng-src="{{item.image}}"></a>
-        <a href="#/memorize/{{item.id}}">{{item.title}}</a>
-        <p>{{item.description}}</p>
-      </li>
-    </ul>
-  </div>
-  <div class="col-md-2">
-    <h2>Coming soon</h2>
-    <ol>
-      <li>1000 Names of Devi</li>
-      <li>Better look</li>
-      <li>Meanings in 108 names</li>
-      <li>Feedback page (for now email hisingh1@gmail.com)</li>
-      <li>Export the missed results to quizlet</li>
-      <li>Export the missed results to anki</li>
-      <li>FAQ page</li>
-      <li>Code on github</li>
-    </ol>
+  <div class="row">
+    <div class="col-md-10">
+      <div class="row">
+        <h1 class="text-center">Learn something!</h1>
+      </div>
+      <div class="row">
+        <div class="col-md-4 thumbnail" ng-repeat="item in items">
+          <a href="#/memorize/{{item.id}}" class="thumb"><img ng-src="{{item.image}}"></a>
+          <a href="#/memorize/{{item.id}}">{{item.title}}</a>
+          <p>{{item.description}}</p>
+        </div> 
+      </div>  
+    </div>
+    <div class="col-md-2">
+      <h2>Coming soon</h2>
+      <ol>
+        <li>Export the missed results to quizlet</li>
+        <li>FAQ page</li>
+        <li>Show Meaning</li>
+        <li>Feedback page (for now email hisingh1@gmail.com)</li>
+        <li>Export the missed results to anki</li>
+        <li>Code on github</li>
+        <li>Better look</li>
+      </ol>
+    </div>
   </div>
 </div>

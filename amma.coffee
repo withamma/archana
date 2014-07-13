@@ -18,6 +18,10 @@ app.config(($routeProvider) ->
   ).otherwise redirectTo: "/")
 
 
+app.controller "NavBarCtrl", ["$scope", ($scope) -> 
+  $scope.isCollapsed = true
+]
+
 app.controller "ItemListerCtrl", ["$scope", "$http", ($scope, $http) ->
   $http.get("learning-items.json").success (data) ->
     $scope.items = data
@@ -53,6 +57,7 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
       $scope.state = "show"
     else
       $scope.state = "end"
+      new Audio("sounds/victory_fanfare.mp3").play()
       storage[id]["currentPosition"] = 0
 
   $scope.submitAnswer = (result) ->
@@ -92,9 +97,21 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
 ]
 
 
-app.controller "ResultsCtrl", ["$scope", "$localStorage", '$routeParams', ($scope, $localStorage, $routeParams) ->
+app.controller "ResultsCtrl", ["$scope", "$localStorage", '$routeParams', '$http','dateFilter',  ($scope, storage, $routeParams, $http, dateFilter) ->
   id = "#{$routeParams.itemId}"
-  $scope.incorrect = $localStorage[id]["incorrect"]
+  $scope.incorrect = storage[id]["incorrect"]
+  $scope.exportQuizlet = () ->
+    $http.post("https://api.quizlet.com/2.0/sets", {
+        "title": id + today()
+        "terms": $scope.incorrect.map (term) -> term.previous
+        "definitions": $scope.incorrect.map (term) -> term.next
+        "lang_terms": "en"
+        "lang_definitions": "en"
+        "allow_discussion": 0
+      }).success (data) ->
+        console.log data
+  today = () ->
+    dateFilter new Date(), "MMM dd yyyy"
 
 ]
 
