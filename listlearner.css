@@ -75,15 +75,14 @@
   margin: auto;
 }
 .question{
-  margin-top: 108px;
+  margin-top: 80px;
   border-bottom: 1px solid #eee;
 }
 .question,.answer{
+  font-family: "Lucida Console", Monaco, monospace;
   color: #eee;
   padding-bottom: 40px;
-  font-size: 3em;
-  line-height: 1.5em;
-  letter-spacing: 1.5px;
+  font-size: 2em;
 }
 
 .meaning{
