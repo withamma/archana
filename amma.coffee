@@ -3,6 +3,7 @@ app = angular.module("linear-learning", [
   "ui.bootstrap"
   'ngStorage'
   'ngTouch'
+  'cfp.hotkeys'
 ])
 
 app.config(($routeProvider) ->
@@ -34,9 +35,40 @@ app.controller "ItemListerCtrl", ["$scope", "$http", "$sessionStorage", ($scope,
   $http.get("http://amma-archana.herokuapp.com/page-does-not-exist")
 ]
  
-app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", '$localStorage', ($scope, $routeParams, $http, $location, storage) ->
+app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", '$localStorage', 'hotkeys', ($scope, $routeParams, $http, $location, storage, hotkeys) ->
   id = "#{$routeParams.itemId}"
   $scope.state = "loading"
+  hotkeys.bindTo($scope)
+    .add({
+      combo: 'u'
+      description: 'Undo'
+      callback: () -> $scope.undo()
+    })
+    .add({
+      combo: 'c'
+      description: 'Correct answer'
+      callback: () -> $scope.submitAnswer "correct"
+    })
+    .add({
+      combo: 'x'
+      description: 'Wrong answer'
+      callback: () -> $scope.submitAnswer "incorrect"
+    })
+    .add({
+      combo: 'r'
+      description: 'Restart'
+      callback: () -> $scope.restart()
+    })
+    .add({
+      combo: 's'
+      description: 'Show Answer'
+      callback: () -> $scope.showAnswer()
+    })
+    .add({
+      combo: 'space'
+      description: 'Show Answer'
+      callback: () -> $scope.showAnswer()
+    })
 
   # wakeup sleeing heroku
   $http.get("http://amma-archana.herokuapp.com/page-does-not-exist")
@@ -68,13 +100,14 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
       storage[id]["currentPosition"] = 0
 
   $scope.submitAnswer = (result) ->
-    if (result isnt "correct")
-      incorrect.push {
-        "previous": previousInLink()
-        "next": nextInLink()
-        "id": $scope.currentPosition
-      }
-    nextState()
+    if ($scope.state is "answer")
+      if (result isnt "correct")
+        incorrect.push {
+          "previous": previousInLink()
+          "next": nextInLink()
+          "id": $scope.currentPosition
+        }
+      nextState()
 
   previousInLink = () ->
     $scope.listToLearn[$scope.currentPosition]
