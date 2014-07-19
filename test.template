@@ -1,6 +1,8 @@
 <div class="test-bg" ng-hide="state === 'end'"> </div>
-<div class="overlay" ng-hide="state === 'end'"> </div>
+<div class="overlay" ng-hide="state === 'end'" ng-swipe-left="undo()" ng-swipe-disable-mouse></div>
 <div class="test-bg-end" ng-show="state === 'end'" data-bg="img/creator.jpg" ng-click="showResults()"> </div>
+
+
 
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="NavBarCtrl">
   <div class="container">
@@ -19,6 +21,9 @@
           <a ng-click="restart()">Restart</a>
         </li>
         <li>
+          <a ng-click="undo()">Undo</a>
+        </li>
+        <li>
           <a ng-click="showResults()">Results (testing purposes only)</a>
         </li>
       </ul>
@@ -27,14 +32,14 @@
 </div>
 
 
-<div class="container">
+<div class="container" ng-swipe-left="undo()" ng-swipe-disable-mouse>
   <div class="row clearfix">
-    <div class="col-md-12 column">
+    <div class="col-md-12">
       <h3 class="text-center noselect question" ng-hide="state === 'end'" ng-bind="linkPrevious()"> </h3>
     </div>
   </div>
   <div class="row clearfix">
-    <div class="col-md-12 column">
+    <div class="col-md-12">
       <h3 class="text-center noselect answer" ng-hide="state === 'end'" ng-bind="linkTest()"> </h3>
     </div>
   </div>
@@ -42,18 +47,21 @@
 
 <!-- Answer Buttons -->
 <div class="row clearfix fixed-footer">
-  <div class="col-md-12 column" ng-show="state === 'show'">
-    <button type="button" class="btn btn-lg btn-warning" ng-click="showAnswer()">Answer</button>
+  <div class="col-md-12" ng-show="state === 'show'">
+    <button type="button" class="btn btn-lg btn-warning" ng-click="showAnswer()">Check</button>
   </div>
-  <div class="col-md-12 column" ng-show="state === 'end'">
+  <div class="col-md-12" ng-show="state === 'end'">
     <button type="button" class="btn btn-lg btn-warning" ng-click="showResults()">Results</button>
   </div>
 </div>
 <div class="row clearfix fixed-footer" ng-show="state === 'answer'">
-  <div class="col-xs-6 column">
+  <div class="col-md-4 col-xs-6">
     <button type="button" class="btn btn-lg btn-danger" ng-click="submitAnswer('incorrect')"><i class="fa fa-times"></i></button>
   </div>
-  <div class="col-xs-6 column">
+  <div class="col-md-4 hidden-xs hidden-md">
+    <button type="button" class="btn btn-lg btn-warning" ng-click="undo()" ng-disabled="currentPosition === 0">Undo</button>
+  </div>
+  <div class="col-md-4 col-xs-6">
     <button type="button" class="btn btn-lg btn-success" ng-click="submitAnswer('correct')"><i class="fa fa-check "></i></button>
   </div>
 </div>

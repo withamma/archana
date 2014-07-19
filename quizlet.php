@@ -1,7 +1,4 @@
 <?php
-	header('Access-Control-Allow-Origin: *');
-	header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
-	header('Content-Type: application/json'); 
 	$url = 'https://api.quizlet.com/2.0/sets';
 	$data = json_decode(file_get_contents("php://input"));
 	$curl = curl_init($url);

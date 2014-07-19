@@ -1,8 +1,8 @@
 app = angular.module("linear-learning", [
   "ngRoute"
-  "ngFitText"
   "ui.bootstrap"
   'ngStorage'
+  'ngTouch'
 ])
 
 app.config(($routeProvider) ->
@@ -26,7 +26,7 @@ app.controller "ItemListerCtrl", ["$scope", "$http", ($scope, $http) ->
   $http.get("learning-items.json").success (data) ->
     $scope.items = data
   # wakeup sleeing heroku
-  $http.get("http://amma-archana.herokuapp.com/quizlet.php")
+  $http.get("http://amma-archana.herokuapp.com/page-does-not-exist")
 ]
  
 app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", '$localStorage', ($scope, $routeParams, $http, $location, storage) ->
@@ -34,7 +34,7 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
   $scope.state = "loading"
 
   # wakeup sleeing heroku
-  $http.get("http://amma-archana.herokuapp.com/quizlet.php")
+  $http.get("http://amma-archana.herokuapp.com/page-does-not-exist")
 
   if not storage[id]?
     storage[id] = {}
@@ -67,6 +67,7 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
       incorrect.push {
         "previous": previousInLink()
         "next": nextInLink()
+        "id": $scope.currentPosition
       }
     nextState()
 
@@ -92,6 +93,12 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
     $scope.currentPosition = storage[id]["currentPosition"]
     incorrect = storage[id]["incorrect"]
     $scope.state = "show"
+
+  $scope.undo = () ->
+    if ($scope.currentPosition isnt 0)
+      if (incorrect.length > 0 and incorrect[incorrect.length-1].id is $scope.currentPosition)
+        incorrect.pop()
+      $scope.currentPosition -= 1
 ]
 
 app.controller "ResultsCtrl", ["$scope", "$localStorage", '$routeParams', '$http','dateFilter',"$window", ($scope, storage, $routeParams, $http, dateFilter, $window) ->
@@ -99,6 +106,8 @@ app.controller "ResultsCtrl", ["$scope", "$localStorage", '$routeParams', '$http
   $scope.buttonColor = "btn-primary"
   $scope.incorrect = storage[$scope.id]["incorrect"]
   $scope.quizletText = "Export to Quizlet"
+
+  $http.get("http://amma-archana.herokuapp.com/page-does-not-exist")
   $scope.exportQuizlet = () ->
     if (not $scope.quizletUrl?)
       $http.post("http://amma-archana.herokuapp.com/quizlet.php", {
