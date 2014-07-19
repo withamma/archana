@@ -8,13 +8,16 @@ app = angular.module("linear-learning", [
 app.config(($routeProvider) ->
   $routeProvider.when("/",
     controller: "ItemListerCtrl"
-    templateUrl: "item-lister.template"
+    templateUrl: "templates/item-lister.template.html"
   ).when("/memorize/:itemId",
     controller: "MemorizeCtrl"
-    templateUrl: "test.template"
+    templateUrl: "templates/test.template.html"
+  ).when("/howto/:itemId",
+    controller: "HowtoCtrl"
+    templateUrl: "templates/howto.template.html"
   ).when("/results/:itemId",
     controller: "ResultsCtrl"
-    templateUrl: "results.template"
+    templateUrl: "templates/results.template.html"
   ).otherwise redirectTo: "/")
 
 
@@ -22,9 +25,11 @@ app.controller "NavBarCtrl", ["$scope", ($scope) ->
   $scope.isCollapsed = true
 ]
 
-app.controller "ItemListerCtrl", ["$scope", "$http", ($scope, $http) ->
+app.controller "ItemListerCtrl", ["$scope", "$http", "$sessionStorage", ($scope, $http, sessionStorage) ->
   $http.get("learning-items.json").success (data) ->
     $scope.items = data
+  $scope.url = (id) ->
+    if (sessionStorage["howtoCompleted"]?) then "#/memorize/#{id}" else "#/howto/#{id}"
   # wakeup sleeing heroku
   $http.get("http://amma-archana.herokuapp.com/page-does-not-exist")
 ]
@@ -101,6 +106,12 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
       $scope.currentPosition -= 1
 ]
 
+app.controller "HowtoCtrl", ["$scope", "$sessionStorage", '$routeParams', '$location', ($scope, storage, $routeParams, $location) ->
+  $scope.continue = () ->
+    storage["howtoCompleted"] = true
+    $location.path "/memorize/#{$routeParams.itemId}"
+]
+
 app.controller "ResultsCtrl", ["$scope", "$localStorage", '$routeParams', '$http','dateFilter',"$window", ($scope, storage, $routeParams, $http, dateFilter, $window) ->
   $scope.id = "#{$routeParams.itemId}"
   $scope.buttonColor = "btn-primary"
@@ -133,7 +144,6 @@ app.controller "ResultsCtrl", ["$scope", "$localStorage", '$routeParams', '$http
 
   today = () ->
     dateFilter new Date(), "MMM dd yyyy"
-
 ]
 
 

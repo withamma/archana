@@ -6,13 +6,16 @@ app = angular.module("linear-learning", ["ngRoute", "ui.bootstrap", 'ngStorage',
 app.config(function($routeProvider) {
   return $routeProvider.when("/", {
     controller: "ItemListerCtrl",
-    templateUrl: "item-lister.template"
+    templateUrl: "templates/item-lister.template.html"
   }).when("/memorize/:itemId", {
     controller: "MemorizeCtrl",
-    templateUrl: "test.template"
+    templateUrl: "templates/test.template.html"
+  }).when("/howto/:itemId", {
+    controller: "HowtoCtrl",
+    templateUrl: "templates/howto.template.html"
   }).when("/results/:itemId", {
     controller: "ResultsCtrl",
-    templateUrl: "results.template"
+    templateUrl: "templates/results.template.html"
   }).otherwise({
     redirectTo: "/"
   });
@@ -25,10 +28,17 @@ app.controller("NavBarCtrl", [
 ]);
 
 app.controller("ItemListerCtrl", [
-  "$scope", "$http", function($scope, $http) {
+  "$scope", "$http", "$sessionStorage", function($scope, $http, sessionStorage) {
     $http.get("learning-items.json").success(function(data) {
       return $scope.items = data;
     });
+    $scope.url = function(id) {
+      if ((sessionStorage["howtoCompleted"] != null)) {
+        return "#/memorize/" + id;
+      } else {
+        return "#/howto/" + id;
+      }
+    };
     return $http.get("http://amma-archana.herokuapp.com/page-does-not-exist");
   }
 ]);
@@ -113,6 +123,15 @@ app.controller("MemorizeCtrl", [
         }
         return $scope.currentPosition -= 1;
       }
+    };
+  }
+]);
+
+app.controller("HowtoCtrl", [
+  "$scope", "$sessionStorage", '$routeParams', '$location', function($scope, storage, $routeParams, $location) {
+    return $scope["continue"] = function() {
+      storage["howtoCompleted"] = true;
+      return $location.path("/memorize/" + $routeParams.itemId);
     };
   }
 ]);
