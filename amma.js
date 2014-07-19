@@ -34,17 +34,15 @@ app.controller("ItemListerCtrl", [
 
 app.controller("MemorizeCtrl", [
   "$scope", '$routeParams', '$http', "$location", '$localStorage', '$sce', function($scope, $routeParams, $http, $location, storage, $sce) {
-    var id, incorrect, log, nextState;
+    var id, incorrect, nextInLink, nextState, previousInLink;
     id = "" + $routeParams.itemId;
     $scope.state = "loading";
     if (storage[id] == null) {
       storage[id] = {};
       storage[id]["currentPosition"] = 0;
-      storage[id]["log"] = {};
     }
     storage[id]["incorrect"] = [];
     $scope.currentPosition = storage[id]["currentPosition"];
-    log = storage[id]["log"];
     incorrect = storage[id]["incorrect"];
     $http.get("learn/" + $routeParams.itemId + ".json").success(function(data) {
       $scope.listToLearn = data.list;
@@ -66,33 +64,32 @@ app.controller("MemorizeCtrl", [
       }
     };
     $scope.submitAnswer = function(result) {
-      if (result === "correct") {
-        log[$scope.currentPosition] = {
-          "correct": true
-        };
-      } else {
-        log[$scope.currentPosition] = {
-          "correct": false
-        };
+      if (result !== "correct") {
         incorrect.push({
-          "previous": $scope.linkPrevious(),
-          "next": $scope.linkTest()
+          "previous": previousInLink(),
+          "next": nextInLink()
         });
       }
       return nextState();
     };
+    previousInLink = function() {
+      return $scope.listToLearn[$scope.currentPosition];
+    };
+    nextInLink = function() {
+      return $scope.listToLearn[$scope.currentPosition + 1];
+    };
     $scope.linkPrevious = function() {
       if ($scope.state !== "loading") {
-        return $sce.trustAsHtml($scope.listToLearn[$scope.currentPosition]);
+        return previousInLink();
       } else {
-        return $sce.trustAsHtml("Loading");
+        return "Loading";
       }
     };
     $scope.linkTest = function() {
       if ($scope.state === "answer") {
-        return $sce.trustAsHtml($scope.listToLearn[$scope.currentPosition + 1]);
+        return nextInLink();
       } else {
-        return $sce.trustAsHtml("?");
+        return "?";
       }
     };
     $scope.showResults = function() {
@@ -101,10 +98,8 @@ app.controller("MemorizeCtrl", [
     return $scope.restart = function() {
       storage[id] = {};
       storage[id]["currentPosition"] = 0;
-      storage[id]["log"] = {};
       storage[id]["incorrect"] = [];
       $scope.currentPosition = storage[id]["currentPosition"];
-      log = storage[id]["log"];
       incorrect = storage[id]["incorrect"];
       return $scope.state = "show";
     };
@@ -112,25 +107,40 @@ app.controller("MemorizeCtrl", [
 ]);
 
 app.controller("ResultsCtrl", [
-  "$scope", "$localStorage", '$routeParams', '$http', 'dateFilter', function($scope, storage, $routeParams, $http, dateFilter) {
-    var id, today;
-    id = "" + $routeParams.itemId;
-    $scope.incorrect = storage[id]["incorrect"];
+  "$scope", "$localStorage", '$routeParams', '$http', 'dateFilter', "$window", function($scope, storage, $routeParams, $http, dateFilter, $window) {
+    var today;
+    $scope.id = "" + $routeParams.itemId;
+    $scope.buttonColor = "btn-primary";
+    $scope.incorrect = storage[$scope.id]["incorrect"];
+    $scope.quizletText = "Export to Quizlet";
     $scope.exportQuizlet = function() {
-      return $http.post("https://api.quizlet.com/2.0/sets", {
-        "title": id + today(),
-        "terms": $scope.incorrect.map(function(term) {
-          return term.previous;
-        }),
-        "definitions": $scope.incorrect.map(function(term) {
-          return term.next;
-        }),
-        "lang_terms": "en",
-        "lang_definitions": "en",
-        "allow_discussion": 0
-      }).success(function(data) {
-        return console.log(data);
-      });
+      if ($scope.quizletUrl == null) {
+        return $http.post("quizlet.php?", {
+          "title": "" + $scope.id + " - " + (today()),
+          "terms": $scope.incorrect.map(function(term) {
+            return term.previous;
+          }),
+          "definitions": $scope.incorrect.map(function(term) {
+            return term.next;
+          }),
+          "lang_terms": "en",
+          "lang_definitions": "en",
+          "allow_discussion": 0,
+          "visibility": "public"
+        }).success(function(data) {
+          console.log(data);
+          $scope.buttonColor = "btn-success";
+          $scope.quizletUrl = data["url"];
+          $scope.quizletText = "Checkout your deck!";
+          return console.log(data["url"]);
+        }).error(function() {
+          $scope.buttonColor = "btn-danger";
+          $scope.quizletUrl = "";
+          return $scope.quizletText = "Could not create deck. Please copy result and learn on your own.";
+        });
+      } else {
+        return $window.open($scope.quizletUrl);
+      }
     };
     return today = function() {
       return dateFilter(new Date(), "MMM dd yyyy");

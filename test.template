@@ -1,7 +1,6 @@
 <div class="test-bg" ng-hide="state === 'end'"> </div>
 <div class="overlay" ng-hide="state === 'end'"> </div>
 <div class="test-bg-end" ng-show="state === 'end'" data-bg="img/creator.jpg" ng-click="showResults()"> </div>
-<!-- <img src="img/creator.jpg" width="100%" alt="Finished" ng-click="showResults()" ng-show="state === 'end'"> -->
 
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="NavBarCtrl">
   <div class="container">
@@ -31,12 +30,12 @@
 <div class="container">
   <div class="row clearfix">
     <div class="col-md-12 column">
-      <h3 class="text-center noselect question" ng-hide="state === 'end'" ng-bind-html="linkPrevious()"> </h3>
+      <h3 class="text-center noselect question" ng-hide="state === 'end'" ng-bind="linkPrevious()"> </h3>
     </div>
   </div>
   <div class="row clearfix">
     <div class="col-md-12 column">
-      <h3 class="text-center noselect answer" ng-hide="state === 'end'" ng-bind-html="linkTest()"> </h3>
+      <h3 class="text-center noselect answer" ng-hide="state === 'end'" ng-bind="linkTest()"> </h3>
     </div>
   </div>
 </div>

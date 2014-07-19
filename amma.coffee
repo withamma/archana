@@ -34,13 +34,10 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
   if not storage[id]?
     storage[id] = {}
     storage[id]["currentPosition"] = 0
-    storage[id]["log"] = {}
   
   storage[id]["incorrect"] = []
   $scope.currentPosition = storage[id]["currentPosition"]
-  log = storage[id]["log"]
   incorrect = storage[id]["incorrect"]
-
 
   $http.get("learn/#{$routeParams.itemId}.json").success (data) ->
     $scope.listToLearn = data.list
@@ -61,25 +58,24 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
       storage[id]["currentPosition"] = 0
 
   $scope.submitAnswer = (result) ->
-    if (result is "correct")
-      log[$scope.currentPosition] = {
-        "correct": true 
-      }
-    else 
-      log[$scope.currentPosition] = {
-        "correct": false 
-      }
+    if (result isnt "correct")
       incorrect.push {
-        "previous": $scope.linkPrevious()
-        "next": $scope.linkTest()
+        "previous": previousInLink()
+        "next": nextInLink()
       }
     nextState()
 
+  previousInLink = () ->
+    $scope.listToLearn[$scope.currentPosition]
+
+  nextInLink = () ->
+    $scope.listToLearn[$scope.currentPosition + 1]
+
   $scope.linkPrevious = () ->
-    if ($scope.state isnt "loading") then $sce.trustAsHtml($scope.listToLearn[$scope.currentPosition]) else $sce.trustAsHtml("Loading")
+    if ($scope.state isnt "loading") then previousInLink() else "Loading"
 
   $scope.linkTest = () ->
-    if ($scope.state is "answer") then $sce.trustAsHtml($scope.listToLearn[$scope.currentPosition + 1]) else $sce.trustAsHtml("?")
+    if ($scope.state is "answer") then nextInLink() else "?"
 
   $scope.showResults = () ->
     $location.path "results/#{id}"
@@ -87,29 +83,40 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
   $scope.restart = () ->
     storage[id] = {}
     storage[id]["currentPosition"] = 0
-    storage[id]["log"] = {}
     storage[id]["incorrect"] = []
     $scope.currentPosition = storage[id]["currentPosition"]
-    log = storage[id]["log"]
     incorrect = storage[id]["incorrect"]
     $scope.state = "show"
-
 ]
 
-
-app.controller "ResultsCtrl", ["$scope", "$localStorage", '$routeParams', '$http','dateFilter',  ($scope, storage, $routeParams, $http, dateFilter) ->
-  id = "#{$routeParams.itemId}"
-  $scope.incorrect = storage[id]["incorrect"]
+app.controller "ResultsCtrl", ["$scope", "$localStorage", '$routeParams', '$http','dateFilter',"$window", ($scope, storage, $routeParams, $http, dateFilter, $window) ->
+  $scope.id = "#{$routeParams.itemId}"
+  $scope.buttonColor = "btn-primary"
+  $scope.incorrect = storage[$scope.id]["incorrect"]
+  $scope.quizletText = "Export to Quizlet"
   $scope.exportQuizlet = () ->
-    $http.post("https://api.quizlet.com/2.0/sets", {
-        "title": id + today()
-        "terms": $scope.incorrect.map (term) -> term.previous
-        "definitions": $scope.incorrect.map (term) -> term.next
-        "lang_terms": "en"
-        "lang_definitions": "en"
-        "allow_discussion": 0
-      }).success (data) ->
-        console.log data
+    if (not $scope.quizletUrl?)
+      $http.post("quizlet.php?", {
+          "title": "#{$scope.id} - #{today()}"
+          "terms": $scope.incorrect.map (term) -> term.previous
+          "definitions": $scope.incorrect.map (term) -> term.next
+          "lang_terms": "en"
+          "lang_definitions": "en"
+          "allow_discussion": 0
+          "visibility": "public"
+        }).success (data) ->
+          console.log data
+          $scope.buttonColor = "btn-success"
+          $scope.quizletUrl = data["url"]
+          $scope.quizletText = "Checkout your deck!"
+          console.log data["url"]
+        .error () ->
+          $scope.buttonColor = "btn-danger"
+          $scope.quizletUrl = ""
+          $scope.quizletText = "Could not create deck. Please copy result and learn on your own."
+    else
+      $window.open($scope.quizletUrl)
+
   today = () ->
     dateFilter new Date(), "MMM dd yyyy"
 

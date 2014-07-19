@@ -15,9 +15,10 @@
     <div class="col-md-2">
       <h2>Coming soon</h2>
       <ol>
-        <li>Export the missed results to quizlet</li>
-        <li>FAQ page</li>
+        <li>Auto show based on time it takes to say name</li>
+        <li>FAQ page with videos showing how to use</li>
         <li>Show Meaning</li>
+        <li>Audio version</li>
         <li>Feedback page (for now email hisingh1@gmail.com)</li>
         <li>Export the missed results to anki</li>
         <li>Code on github</li>

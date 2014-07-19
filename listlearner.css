@@ -1,3 +1,7 @@
+.full-width {
+  width: 100%;
+}
+
 .test-bg { 
   position: fixed;
   z-index: -100;
@@ -104,6 +108,7 @@
 }
 
 .results {
+  margin-top: 50px;
   color: #eee;
   font-size: 2em;
 }

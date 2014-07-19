@@ -1,12 +1,24 @@
 <div class="results-bg" data-bg="img/cover-smile.jpg"></div>
 <div class="overlay" ng-hide="state === 'end'"> </div>
 
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation" >
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" ng-href="#/memorize/{{id}}">{{id}}</a>
+    </div>
+  </div>
+</div>
+
 <div class="container-fluid results">
+  <div class="row clearfix">
+    <div class="col-md-12">
+      <a ng-click="exportQuizlet()" class="btn full-width" ng-class="buttonColor">{{quizletText}}</a>
+    </div>
+  </div>
   <h3 class="modal-title">Things you need to work on:</h3>
   <ul>
     <li ng-repeat="item in incorrect">
-      <span class="largeFont">{{ item.previous }} -> {{ item.next }}</span>
+      <span ng-bind="item.previous"></span> -> <span ng-bind="item.next"></span>
     </li>
   </ul>
-<button type="button" class="btn btn-lg btn-success" ng-click="exportQuizlet()">Export to Quizlet</button>
 </div>
