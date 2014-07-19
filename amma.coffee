@@ -25,11 +25,16 @@ app.controller "NavBarCtrl", ["$scope", ($scope) ->
 app.controller "ItemListerCtrl", ["$scope", "$http", ($scope, $http) ->
   $http.get("learning-items.json").success (data) ->
     $scope.items = data
+  # wakeup sleeing heroku
+  $http.get("http://amma-archana.herokuapp.com/quizlet.php")
 ]
  
-app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", '$localStorage', '$sce', ($scope, $routeParams, $http, $location, storage, $sce) ->
+app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", '$localStorage', ($scope, $routeParams, $http, $location, storage) ->
   id = "#{$routeParams.itemId}"
   $scope.state = "loading"
+
+  # wakeup sleeing heroku
+  $http.get("http://amma-archana.herokuapp.com/quizlet.php")
 
   if not storage[id]?
     storage[id] = {}
@@ -96,7 +101,7 @@ app.controller "ResultsCtrl", ["$scope", "$localStorage", '$routeParams', '$http
   $scope.quizletText = "Export to Quizlet"
   $scope.exportQuizlet = () ->
     if (not $scope.quizletUrl?)
-      $http.post("quizlet.php?", {
+      $http.post("http://amma-archana.herokuapp.com/quizlet.php", {
           "title": "#{$scope.id} - #{today()}"
           "terms": $scope.incorrect.map (term) -> term.previous
           "definitions": $scope.incorrect.map (term) -> term.next

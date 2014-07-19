@@ -26,17 +26,19 @@ app.controller("NavBarCtrl", [
 
 app.controller("ItemListerCtrl", [
   "$scope", "$http", function($scope, $http) {
-    return $http.get("learning-items.json").success(function(data) {
+    $http.get("learning-items.json").success(function(data) {
       return $scope.items = data;
     });
+    return $http.get("http://amma-archana.herokuapp.com/quizlet.php");
   }
 ]);
 
 app.controller("MemorizeCtrl", [
-  "$scope", '$routeParams', '$http', "$location", '$localStorage', '$sce', function($scope, $routeParams, $http, $location, storage, $sce) {
+  "$scope", '$routeParams', '$http', "$location", '$localStorage', function($scope, $routeParams, $http, $location, storage) {
     var id, incorrect, nextInLink, nextState, previousInLink;
     id = "" + $routeParams.itemId;
     $scope.state = "loading";
+    $http.get("http://amma-archana.herokuapp.com/quizlet.php");
     if (storage[id] == null) {
       storage[id] = {};
       storage[id]["currentPosition"] = 0;
@@ -115,7 +117,7 @@ app.controller("ResultsCtrl", [
     $scope.quizletText = "Export to Quizlet";
     $scope.exportQuizlet = function() {
       if ($scope.quizletUrl == null) {
-        return $http.post("quizlet.php?", {
+        return $http.post("http://amma-archana.herokuapp.com/quizlet.php", {
           "title": "" + $scope.id + " - " + (today()),
           "terms": $scope.incorrect.map(function(term) {
             return term.previous;
