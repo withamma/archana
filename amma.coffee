@@ -59,7 +59,7 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
       $scope.state = "show"
     else
       $scope.state = "end"
-      new Audio("sounds/victory_fanfare.mp3").play()
+      new Audio("sounds/3oms.mp3").play()
       storage[id]["currentPosition"] = 0
 
   $scope.submitAnswer = (result) ->
