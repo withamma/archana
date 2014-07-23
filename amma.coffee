@@ -29,6 +29,7 @@ app.controller "NavBarCtrl", ["$scope", ($scope) ->
 app.controller "ItemListerCtrl", ["$scope", "$http", "$sessionStorage", ($scope, $http, sessionStorage) ->
   $http.get("learning-items.json").success (data) ->
     $scope.items = data
+
   $scope.url = (id) ->
     if (sessionStorage["howtoCompleted"]?) then "#/memorize/#{id}" else "#/howto/#{id}"
   # wakeup sleeing heroku
@@ -85,9 +86,12 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
     $scope.listToLearn = data.list
     $scope.title = data.title
     $scope.state = "show"
-  
+    $scope.listMeaning = data.meaning_list
+
   $scope.showAnswer = () ->
     $scope.state = "answer"
+
+
 
   nextState = () ->
     if $scope.currentPosition + 2 < $scope.listToLearn.length
@@ -109,11 +113,11 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
         }
       nextState()
 
-  previousInLink = () ->
-    $scope.listToLearn[$scope.currentPosition]
+  previousInLink = (meaning) ->
+    if (meaning?) then $scope.listMeaning[$scope.currentPosition] else $scope.listToLearn[$scope.currentPosition]
 
   nextInLink = () ->
-    $scope.listToLearn[$scope.currentPosition + 1]
+    if (meaning?) then $scope.listMeaning[$scope.currentPosition + 1] else $scope.listToLearn[$scope.currentPosition + 1]
 
   $scope.linkPrevious = () ->
     if ($scope.state isnt "loading") then previousInLink() else "Loading"

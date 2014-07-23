@@ -96,7 +96,8 @@ app.controller("MemorizeCtrl", [
     $http.get("learn/" + $routeParams.itemId + ".json").success(function(data) {
       $scope.listToLearn = data.list;
       $scope.title = data.title;
-      return $scope.state = "show";
+      $scope.state = "show";
+      return $scope.listMeaning = data.meaning_list;
     });
     $scope.showAnswer = function() {
       return $scope.state = "answer";
@@ -124,11 +125,19 @@ app.controller("MemorizeCtrl", [
         return nextState();
       }
     };
-    previousInLink = function() {
-      return $scope.listToLearn[$scope.currentPosition];
+    previousInLink = function(meaning) {
+      if ((meaning != null)) {
+        return $scope.listMeaning[$scope.currentPosition];
+      } else {
+        return $scope.listToLearn[$scope.currentPosition];
+      }
     };
     nextInLink = function() {
-      return $scope.listToLearn[$scope.currentPosition + 1];
+      if ((typeof meaning !== "undefined" && meaning !== null)) {
+        return $scope.listMeaning[$scope.currentPosition + 1];
+      } else {
+        return $scope.listToLearn[$scope.currentPosition + 1];
+      }
     };
     $scope.linkPrevious = function() {
       if ($scope.state !== "loading") {
