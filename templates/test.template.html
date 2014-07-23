@@ -13,18 +13,21 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">{{title}}</a>
+      <a class="navbar-brand">{{title}}</a>
     </div>
     <div class="collapse navbar-collapse" collapse="isCollapsed">
       <ul class="nav navbar-nav">
         <li>
-          <a ng-click="restart()">Restart</a>
+          <a href="#">Home</a>
+        </li>
+        <li>
+          <a ng-click="toggleMeaning()">Toggle Meaning</a>
         </li>
         <li>
           <a ng-click="undo()">Undo</a>
         </li>
         <li>
-          <a ng-click="showResults()">Results (testing purposes only)</a>
+          <a ng-click="restart()">Restart</a>
         </li>
       </ul>
     </div>
@@ -35,12 +38,18 @@
 <div class="container" ng-swipe-left="undo()" ng-swipe-disable-mouse>
   <div class="row clearfix">
     <div class="col-md-12">
-      <h3 class="text-center noselect question" ng-hide="state === 'end'" ng-bind="linkPrevious()"> </h3>
+      <div class="text-center noselect question">
+        <h3  ng-hide="state === 'end'" ng-bind="linkPrevious()"> </h3>
+        <h4 ng-show="listMeaning && displayMeaning" ng-bind="meaningPrevious()"></h4>
+      </div>
     </div>
   </div>
   <div class="row clearfix">
     <div class="col-md-12">
-      <h3 class="text-center noselect answer" ng-hide="state === 'end'" ng-bind="linkTest()"> </h3>
+      <div class="text-center noselect answer">
+        <h3  ng-hide="state === 'end'" ng-bind="linkTest()"> </h3>
+        <h4 ng-show="listMeaning && displayMeaning" ng-bind="meaningTest()"></h4>
+      </div>
     </div>
   </div>
 </div>

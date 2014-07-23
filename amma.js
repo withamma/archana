@@ -84,15 +84,23 @@ app.controller("MemorizeCtrl", [
       callback: function() {
         return $scope.showAnswer();
       }
+    }).add({
+      combo: 'm',
+      description: 'Show Meaning',
+      callback: function() {
+        return $scope.toggleMeaning();
+      }
     });
     $http.get("http://amma-archana.herokuapp.com/page-does-not-exist");
     if (storage[id] == null) {
       storage[id] = {};
       storage[id]["currentPosition"] = 0;
+      storage[id]["displayMeaning"] = false;
     }
     storage[id]["incorrect"] = [];
     $scope.currentPosition = storage[id]["currentPosition"];
     incorrect = storage[id]["incorrect"];
+    $scope.displayMeaning = storage[id]["displayMeaning"];
     $http.get("learn/" + $routeParams.itemId + ".json").success(function(data) {
       $scope.listToLearn = data.list;
       $scope.title = data.title;
@@ -101,6 +109,9 @@ app.controller("MemorizeCtrl", [
     });
     $scope.showAnswer = function() {
       return $scope.state = "answer";
+    };
+    $scope.toggleMeaning = function() {
+      return $scope.displayMeaning = !$scope.displayMeaning;
     };
     nextState = function() {
       if ($scope.currentPosition + 2 < $scope.listToLearn.length) {
@@ -132,8 +143,8 @@ app.controller("MemorizeCtrl", [
         return $scope.listToLearn[$scope.currentPosition];
       }
     };
-    nextInLink = function() {
-      if ((typeof meaning !== "undefined" && meaning !== null)) {
+    nextInLink = function(meaning) {
+      if ((meaning != null)) {
         return $scope.listMeaning[$scope.currentPosition + 1];
       } else {
         return $scope.listToLearn[$scope.currentPosition + 1];
@@ -151,6 +162,16 @@ app.controller("MemorizeCtrl", [
         return nextInLink();
       } else {
         return "?";
+      }
+    };
+    $scope.meaningPrevious = function() {
+      return previousInLink(true);
+    };
+    $scope.meaningTest = function() {
+      if ($scope.state === "answer") {
+        return nextInLink(true);
+      } else {
+        return "";
       }
     };
     $scope.showResults = function() {

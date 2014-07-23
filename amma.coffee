@@ -70,17 +70,23 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
       description: 'Show Answer'
       callback: () -> $scope.showAnswer()
     })
-
+    .add({
+      combo: 'm'
+      description: 'Show Meaning'
+      callback: () -> $scope.toggleMeaning()
+    })
   # wakeup sleeing heroku
   $http.get("http://amma-archana.herokuapp.com/page-does-not-exist")
 
   if not storage[id]?
     storage[id] = {}
     storage[id]["currentPosition"] = 0
+    storage[id]["displayMeaning"] = false
   
   storage[id]["incorrect"] = []
   $scope.currentPosition = storage[id]["currentPosition"]
   incorrect = storage[id]["incorrect"]
+  $scope.displayMeaning = storage[id]["displayMeaning"]
 
   $http.get("learn/#{$routeParams.itemId}.json").success (data) ->
     $scope.listToLearn = data.list
@@ -91,7 +97,8 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
   $scope.showAnswer = () ->
     $scope.state = "answer"
 
-
+  $scope.toggleMeaning = () ->
+    $scope.displayMeaning = !$scope.displayMeaning
 
   nextState = () ->
     if $scope.currentPosition + 2 < $scope.listToLearn.length
@@ -116,7 +123,7 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
   previousInLink = (meaning) ->
     if (meaning?) then $scope.listMeaning[$scope.currentPosition] else $scope.listToLearn[$scope.currentPosition]
 
-  nextInLink = () ->
+  nextInLink = (meaning) ->
     if (meaning?) then $scope.listMeaning[$scope.currentPosition + 1] else $scope.listToLearn[$scope.currentPosition + 1]
 
   $scope.linkPrevious = () ->
@@ -124,6 +131,12 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
 
   $scope.linkTest = () ->
     if ($scope.state is "answer") then nextInLink() else "?"
+
+  $scope.meaningPrevious = () ->
+    previousInLink(true)
+
+  $scope.meaningTest = () ->
+    if ($scope.state is "answer") then nextInLink(true) else ""
 
   $scope.showResults = () ->
     $location.path "results/#{id}"
