@@ -1,3 +1,5 @@
+
+
 .full-width {
   width: 100%;
 }
@@ -103,6 +105,9 @@
   font-size: 2em;
   line-height: 2.1em;
   text-shadow: 0 1px 3px rgba(0, 0, 0, .5);
+}
+.answer {
+  padding-bottom: 100px;
 }
 
 .meaning{
