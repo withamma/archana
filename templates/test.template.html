@@ -56,21 +56,21 @@
 
 <!-- Answer Buttons -->
 <div class="row clearfix fixed-footer">
-  <div class="col-md-12" ng-show="state === 'show'">
+  <div class="col-md-12" ng-if="state === 'show'">
     <button type="button" class="btn btn-lg btn-warning" ng-click="showAnswer()">Check</button>
   </div>
-  <div class="col-md-12" ng-show="state === 'end'">
+  <div class="col-md-12" ng-if="state === 'end'">
     <button type="button" class="btn btn-lg btn-warning" ng-click="showResults()">Results</button>
   </div>
 </div>
-<div class="row clearfix fixed-footer" ng-show="state === 'answer'">
+<div class="row clearfix fixed-footer" ng-if="state === 'answer'">
   <div class="col-md-4 col-xs-6">
-    <button type="button" class="btn btn-lg btn-danger" ng-click="submitAnswer('incorrect')"><i class="glyphicon glyphicon-remove"></i></button>
+    <button type="button" class="btn btn-lg btn-danger" ng-click="submitAnswer('incorrect')"><i class="fa fa-times"></i></button>
   </div>
   <div class="col-md-4 hidden-xs hidden-sm">
     <button type="button" class="btn btn-lg btn-warning" ng-click="undo()" ng-disabled="currentPosition === 0">Undo</button>
   </div>
   <div class="col-md-4 col-xs-6">
-    <button type="button" class="btn btn-lg btn-success" ng-click="submitAnswer('correct')"><i class="glyphicon glyphicon-ok"></i></button>
+    <button type="button" class="btn btn-lg btn-success" ng-click="submitAnswer('correct')"><i class="fa fa-check "></i></button>
   </div>
 </div>
