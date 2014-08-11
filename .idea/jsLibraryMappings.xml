@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptLibraryMappings">
+    <file url="file://$PROJECT_DIR$/index.html" libraries="{angular, angular-animate, angular-route, angular-touch}" />
+    <file url="mock:///index.html" libraries="{html5shiv}" />
+    <file url="mock:///index.html" libraries="{respond}" />
+    <file url="PROJECT" libraries="{Node.js v0.10.25 Core Modules}" />
+  </component>
+</project>
+

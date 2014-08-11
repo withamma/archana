@@ -1,5 +1,6 @@
 <div class="test-bg" ng-hide="state === 'end'"> </div>
-<div class="overlay" ng-hide="state === 'end'" ng-swipe-left="undo()" ng-swipe-disable-mouse></div>
+
+<div class="overlay" ng-hide="state === 'end'" ng-swipe-left="undo()"></div>
 <div class="test-bg-end" ng-show="state === 'end'" data-bg="img/creator.jpg" ng-click="showResults()"> </div>
 
 
@@ -24,6 +25,9 @@
           <a ng-click="toggleMeaning()">Toggle Meaning</a>
         </li>
         <li>
+          <a ng-click="showHint()">Show Hint</a>
+        </li>
+        <li>
           <a ng-click="undo()">Undo</a>
         </li>
         <li>
@@ -35,20 +39,22 @@
 </div>
 
 
-<div class="container" ng-swipe-left="undo()" ng-swipe-disable-mouse>
-  <div class="row clearfix">
+<div class="container" ng-swipe-left="undo()">
+<!--   <div class="row clearfix">
     <div class="col-md-12">
       <div class="text-center noselect question">
         <h3  ng-hide="state === 'end'" ng-bind="linkPrevious()"> </h3>
         <h4 ng-show="listMeaning && displayMeaning" ng-bind="meaningPrevious()"></h4>
       </div>
     </div>
-  </div>
+  </div> -->
   <div class="row clearfix">
     <div class="col-md-12">
       <div class="text-center noselect answer">
         <h3  ng-hide="state === 'end'" ng-bind="linkTest()"> </h3>
-        <h4 ng-show="listMeaning && displayMeaning" ng-bind="meaningTest()"></h4>
+        <h4 ng-if="listMeaning && displayMeaning" ng-bind="meaningTest()"></h4>
+        <button type="button" class="btn btn-lg btn-outline" ng-click="showHint()" ng-if="hint === false">Hint</button>
+        <h4 ng-if="hint === true" ng-bind="getHint()"></h4>
       </div>
     </div>
   </div>
@@ -57,7 +63,7 @@
 <!-- Answer Buttons -->
 <div class="row clearfix fixed-footer">
   <div class="col-md-12" ng-if="state === 'show'">
-    <button type="button" class="btn btn-lg btn-warning" ng-click="showAnswer()">Check</button>
+    <button type="button" class="btn btn-lg btn-warning" ng-click="showAnswer()">Next</button>
   </div>
   <div class="col-md-12" ng-if="state === 'end'">
     <button type="button" class="btn btn-lg btn-warning" ng-click="showResults()">Results</button>

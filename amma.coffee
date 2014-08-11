@@ -4,7 +4,16 @@ app = angular.module("linear-learning", [
   'ngStorage'
   'ngTouch'
   'cfp.hotkeys'
+  'ngAnimate'
 ])
+
+app.directive 'backImg', () ->
+  (scope, element, attrs) ->
+    attrs.$observe "backImg", (val) ->
+      element.css
+        'background-image' : "url(#{val})"
+        "background-size" : "cover"
+
 
 app.config(($routeProvider) ->
   $routeProvider.when("/",
@@ -39,6 +48,7 @@ app.controller "ItemListerCtrl", ["$scope", "$http", "$sessionStorage", ($scope,
 app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", '$localStorage', 'hotkeys', ($scope, $routeParams, $http, $location, storage, hotkeys) ->
   id = "#{$routeParams.itemId}"
   $scope.state = "loading"
+  $scope.hint = false
   hotkeys.bindTo($scope)
     .add({
       combo: 'u'
@@ -75,6 +85,11 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
       description: 'Show Meaning'
       callback: () -> $scope.toggleMeaning()
     })
+    .add({
+      combo: 'h'
+      description: 'Show Hint'
+      callback: () -> $scope.showHint()
+    })
   # wakeup sleeing heroku
   $http.get("http://amma-archana.herokuapp.com/page-does-not-exist")
 
@@ -82,17 +97,28 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
     storage[id] = {}
     storage[id]["currentPosition"] = 0
     storage[id]["displayMeaning"] = false
-  
-  storage[id]["incorrect"] = []
-  $scope.currentPosition = storage[id]["currentPosition"]
+    storage[id]["incorrect"] = []
+
   incorrect = storage[id]["incorrect"]
+  $scope.currentPosition = storage[id]["currentPosition"]
   $scope.displayMeaning = storage[id]["displayMeaning"]
 
-  $http.get("learn/#{$routeParams.itemId}.json").success (data) ->
-    $scope.listToLearn = data.list
-    $scope.title = data.title
-    $scope.state = "show"
-    $scope.listMeaning = data.meaning_list
+  if storage[id].listToLearn?
+    $scope.listToLearn = storage[id].listToLearn
+    $scope.listOfMeaning = storage[id].listOfMeaning
+    $scope.title = storage[id].title
+    $scope.state = "show"    
+  else
+    $http.get("learn/#{$routeParams.itemId}.json").success (data) ->
+      storage[id].listToLearn = data.listToLearn
+      storage[id].listOfMeaning = data.listOfMeaning
+      storage[id].title = data.title
+      $scope.listToLearn = data.listToLearn
+      $scope.listOfMeaning = data.listOfMeaning
+      $scope.title = data.title
+      $scope.state = "show"
+
+  endAudio = new Audio("sounds/3oms.mp3")
 
   $scope.showAnswer = () ->
     $scope.state = "answer"
@@ -101,36 +127,43 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
     $scope.displayMeaning = !$scope.displayMeaning
 
   nextState = () ->
+    $scope.hint = false
     if $scope.currentPosition + 2 < $scope.listToLearn.length
       $scope.currentPosition += 1
       storage[id]["currentPosition"] = $scope.currentPosition
       $scope.state = "show"
     else
       $scope.state = "end"
-      new Audio("sounds/3oms.mp3").play()
-      storage[id]["currentPosition"] = 0
+      endAudio.play()
+
+  $scope.showHint = () ->
+    $scope.hint = true
+
+  $scope.getHint = () ->
+    nextInLink().slice(0,10)
 
   $scope.submitAnswer = (result) ->
     if ($scope.state is "answer")
       if (result isnt "correct")
-        incorrect.push {
-          "previous": previousInLink()
-          "next": nextInLink()
-          "id": $scope.currentPosition
-        }
+        incorrect.push $scope.currentPosition
       nextState()
 
   previousInLink = (meaning) ->
-    if (meaning?) then $scope.listMeaning[$scope.currentPosition] else $scope.listToLearn[$scope.currentPosition]
+    if (meaning?) then $scope.listOfMeaning[$scope.currentPosition] else $scope.listToLearn[$scope.currentPosition]
 
   nextInLink = (meaning) ->
-    if (meaning?) then $scope.listMeaning[$scope.currentPosition + 1] else $scope.listToLearn[$scope.currentPosition + 1]
+    if (meaning?) then $scope.listOfMeaning[$scope.currentPosition + 1] else $scope.listToLearn[$scope.currentPosition + 1]
 
   $scope.linkPrevious = () ->
     if ($scope.state isnt "loading") then previousInLink() else "Loading"
 
   $scope.linkTest = () ->
-    if ($scope.state is "answer") then nextInLink() else "?"
+    if ($scope.state is "loading")
+      return "Loading"
+    else if ($scope.state is "answer") 
+      return nextInLink() 
+    else 
+      return previousInLink()
 
   $scope.meaningPrevious = () ->
     previousInLink(true)
@@ -142,18 +175,22 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
     $location.path "results/#{id}"
 
   $scope.restart = () ->
-    storage[id] = {}
     storage[id]["currentPosition"] = 0
     storage[id]["incorrect"] = []
     $scope.currentPosition = storage[id]["currentPosition"]
     incorrect = storage[id]["incorrect"]
     $scope.state = "show"
 
+  if storage[id].restart is true
+    $scope.restart()
+    storage[id].restart = false
+
   $scope.undo = () ->
-    if ($scope.currentPosition isnt 0)
-      if (incorrect.length > 0 and incorrect[incorrect.length-1].id is $scope.currentPosition)
+    if ($scope.currentPosition > -1)
+      if (incorrect.length > 0 and incorrect[incorrect.length-1] is $scope.currentPosition)
         incorrect.pop()
       $scope.currentPosition -= 1
+      $scope.state = "answer"
 ]
 
 app.controller "HowtoCtrl", ["$scope", "$sessionStorage", '$routeParams', '$location', ($scope, storage, $routeParams, $location) ->
@@ -164,11 +201,23 @@ app.controller "HowtoCtrl", ["$scope", "$sessionStorage", '$routeParams', '$loca
 
 app.controller "ResultsCtrl", ["$scope", "$localStorage", '$routeParams', '$http','dateFilter',"$window", ($scope, storage, $routeParams, $http, dateFilter, $window) ->
   $scope.id = "#{$routeParams.itemId}"
+  state = storage[$scope.id]
   $scope.buttonColor = "btn-primary"
-  $scope.incorrect = storage[$scope.id]["incorrect"]
+  $scope.incorrect = state.incorrect.map (id) -> {
+    next: state.listToLearn[id+1]
+    previous: state.listToLearn[id]
+  }
   $scope.quizletText = "Export to Quizlet"
-
+  storage[$scope.id].restart = true
   $http.get("http://amma-archana.herokuapp.com/page-does-not-exist")
+  if (not storage[$scope.id].history?)
+    storage[$scope.id].history = {}
+  now = new Date()
+  history = storage[$scope.id].history
+  history[now] = {
+    incorrect: state.incorrect.slice 0    
+  }
+
   $scope.exportQuizlet = () ->
     if (not $scope.quizletUrl?)
       $http.post("http://amma-archana.herokuapp.com/quizlet.php", {
@@ -180,6 +229,7 @@ app.controller "ResultsCtrl", ["$scope", "$localStorage", '$routeParams', '$http
           "allow_discussion": 0
           "visibility": "public"
         }).success (data) ->
+          history[now].quizletUrl = data["url"]
           console.log data
           $scope.buttonColor = "btn-success"
           $scope.quizletUrl = data["url"]

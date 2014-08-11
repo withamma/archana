@@ -4,6 +4,31 @@
   width: 100%;
 }
 
+.btn-outline {
+    color: #563d7c;
+    background-color: transparent;
+    border-color: #563d7c;
+}
+
+.btn-outline:hover,.btn-outline:focus,.btn-outline:active {
+    color: #fff;
+    background-color: #563d7c;
+    border-color: #563d7c;
+}
+
+.btn-outline-inverse {
+    color: #fff;
+    background-color: transparent;
+    border-color: #cdbfe3;
+}
+
+.btn-outline-inverse:hover,.btn-outline-inverse:focus,.btn-outline-inverse:active {
+    color: #563d7c;
+    text-shadow: none;
+    background-color: #fff;
+    border-color: #fff;
+}
+
 .test-bg { 
   position: fixed;
   z-index: -100;
@@ -38,6 +63,7 @@
   width: 100%;
   height: 100%;
   background: url(img/cover-smile.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -107,6 +133,7 @@
   text-shadow: 0 1px 3px rgba(0, 0, 0, .5);
 }
 .answer {
+  margin-top: 80px;
   padding-bottom: 100px;
 }
 
