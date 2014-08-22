@@ -29,10 +29,6 @@ app.config(($routeProvider) ->
   ).otherwise redirectTo: "/")
 
 
-app.controller "NavBarCtrl", ["$scope", ($scope) -> 
-  $scope.isCollapsed = true
-]
-
 app.controller "ItemListerCtrl", ["$scope", "$http", "$sessionStorage", ($scope, $http, sessionStorage) ->
   $http.get("learning-items.json").success (data) ->
     $scope.items = data
@@ -104,13 +100,14 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
   $scope.currentPosition = storage[id]["currentPosition"]
   $scope.displayMeaning = storage[id]["displayMeaning"]
 
-  if storage[id].listToLearn?
+  if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > 1408729273829
     $scope.listToLearn = storage[id].listToLearn
     $scope.listOfMeaning = storage[id].listOfMeaning
     $scope.title = storage[id].title
     $scope.state = "show"    
   else
     $http.get("learn/#{$routeParams.itemId}.json").success (data) ->
+      storage.lastUpdate = (new Date).getTime()
       storage[id].listToLearn = data.listToLearn
       storage[id].listOfMeaning = data.listOfMeaning
       storage[id].title = data.title
@@ -141,7 +138,7 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
     $scope.hint = true
 
   $scope.getHint = () ->
-    if $scope.state is "show" then nextInLink().slice(0,10) else ""
+    if $scope.state is "show" then nextInLink().slice(0,15) else ""
 
   $scope.submitAnswer = (result) ->
     if ($scope.state is "answer")

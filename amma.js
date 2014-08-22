@@ -28,12 +28,6 @@ app.config(function($routeProvider) {
   });
 });
 
-app.controller("NavBarCtrl", [
-  "$scope", function($scope) {
-    return $scope.isCollapsed = true;
-  }
-]);
-
 app.controller("ItemListerCtrl", [
   "$scope", "$http", "$sessionStorage", function($scope, $http, sessionStorage) {
     $http.get("learning-items.json").success(function(data) {
@@ -118,13 +112,14 @@ app.controller("MemorizeCtrl", [
     incorrect = storage[id]["incorrect"];
     $scope.currentPosition = storage[id]["currentPosition"];
     $scope.displayMeaning = storage[id]["displayMeaning"];
-    if (storage[id].listToLearn != null) {
+    if ((storage[id].listToLearn != null) && (storage.lastUpdate != null) && storage.lastUpdate > 1408729273829) {
       $scope.listToLearn = storage[id].listToLearn;
       $scope.listOfMeaning = storage[id].listOfMeaning;
       $scope.title = storage[id].title;
       $scope.state = "show";
     } else {
       $http.get("learn/" + $routeParams.itemId + ".json").success(function(data) {
+        storage.lastUpdate = (new Date).getTime();
         storage[id].listToLearn = data.listToLearn;
         storage[id].listOfMeaning = data.listOfMeaning;
         storage[id].title = data.title;
@@ -157,7 +152,7 @@ app.controller("MemorizeCtrl", [
     };
     $scope.getHint = function() {
       if ($scope.state === "show") {
-        return nextInLink().slice(0, 10);
+        return nextInLink().slice(0, 15);
       } else {
         return "";
       }
