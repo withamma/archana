@@ -7,12 +7,10 @@ app = angular.module("linear-learning", [
   'ngAnimate'
 ])
 
-app.directive 'backImg', () ->
+app.directive "fullCoverImage", ->
   (scope, element, attrs) ->
-    attrs.$observe "backImg", (val) ->
-      element.css
-        'background-image' : "url(#{val})"
-        "background-size" : "cover"
+    element.css "background-image", "url(#{attrs.fullCoverImage})"
+    element.addClass "full-bg"
 
 
 app.config(($routeProvider) ->
@@ -49,47 +47,50 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
   id = "#{$routeParams.itemId}"
   $scope.state = "loading"
   $scope.hint = false
-  hotkeys.bindTo($scope)
-    .add({
-      combo: 'u'
-      description: 'Undo'
-      callback: () -> $scope.undo()
-    })
-    .add({
-      combo: 'c'
-      description: 'Correct answer'
-      callback: () -> $scope.submitAnswer "correct"
-    })
-    .add({
-      combo: 'x'
-      description: 'Wrong answer'
-      callback: () -> $scope.submitAnswer "incorrect"
-    })
-    .add({
-      combo: 'r'
-      description: 'Restart'
-      callback: () -> $scope.restart()
-    })
-    .add({
-      combo: 's'
-      description: 'Show Answer'
-      callback: () -> $scope.showAnswer()
-    })
-    .add({
-      combo: 'space'
-      description: 'Show Answer'
-      callback: () -> $scope.showAnswer()
-    })
-    .add({
-      combo: 'm'
-      description: 'Show Meaning'
-      callback: () -> $scope.toggleMeaning()
-    })
-    .add({
-      combo: 'h'
-      description: 'Show Hint'
-      callback: () -> $scope.showHint()
-    })
+  bindHotkeys = ->
+    hotkeys.bindTo($scope)
+      .add({
+        combo: 'u'
+        description: 'Undo'
+        callback: () -> $scope.undo()
+      })
+      .add({
+        combo: 'c'
+        description: 'Correct answer'
+        callback: () -> $scope.submitAnswer "correct"
+      })
+      .add({
+        combo: 'x'
+        description: 'Wrong answer'
+        callback: () -> $scope.submitAnswer "incorrect"
+      })
+      .add({
+        combo: 'r'
+        description: 'Restart'
+        callback: () -> $scope.restart()
+      })
+      .add({
+        combo: 's'
+        description: 'Show Answer'
+        callback: () -> $scope.showAnswer()
+      })
+      .add({
+        combo: 'space'
+        description: 'Show Answer'
+        callback: () -> $scope.showAnswer()
+      })
+      .add({
+        combo: 'm'
+        description: 'Show Meaning'
+        callback: () -> $scope.toggleMeaning()
+      })
+      .add({
+        combo: 'h'
+        description: 'Show Hint'
+        callback: () -> $scope.showHint()
+      })
+
+  bindHotkeys()
   # wakeup sleeing heroku
   $http.get("http://amma-archana.herokuapp.com/page-does-not-exist")
 
@@ -140,7 +141,7 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
     $scope.hint = true
 
   $scope.getHint = () ->
-    nextInLink().slice(0,10)
+    if $scope.state is "show" then nextInLink().slice(0,10) else ""
 
   $scope.submitAnswer = (result) ->
     if ($scope.state is "answer")
@@ -161,15 +162,17 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
     if ($scope.state is "loading")
       return "Loading"
     else if ($scope.state is "answer") 
-      return nextInLink() 
+      return nextInLink()
     else 
       return previousInLink()
 
-  $scope.meaningPrevious = () ->
-    previousInLink(true)
-
-  $scope.meaningTest = () ->
-    if ($scope.state is "answer") then nextInLink(true) else ""
+  $scope.meaning = () ->
+    if ($scope.state is "loading")
+      return "Loading"
+    else if ($scope.state is "answer")
+      return nextInLink(true)
+    else
+      return previousInLink(true)
 
   $scope.showResults = () ->
     $location.path "results/#{id}"
