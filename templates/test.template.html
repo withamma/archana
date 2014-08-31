@@ -18,7 +18,7 @@
     <div class="collapse navbar-collapse" collapse="isCollapsed" ng-class="!isCollapsed && 'in'" ng-click="isCollapsed=true">
       <ul class="nav navbar-nav">
         <li>
-          <a href="#">Home</a>
+          <a ng-href="#">Home</a>
         </li>
         <li>
           <a ng-click="toggleMeaning()">Toggle Meaning</a>
@@ -31,6 +31,9 @@
         </li>
         <li>
           <a ng-click="restart()">Restart</a>
+        </li>
+        <li>
+          <a ng-click="emptyHistory()">Empty History</a>
         </li>
       </ul>
     </div>
@@ -50,7 +53,7 @@
   <div class="row clearfix">
     <div class="col-md-12">
       <div class="text-center noselect answer">
-        <h3  ng-hide="state === 'end'" ng-bind="linkTest()"> </h3>
+        <h3  ng-hide="state === 'end'" ng-bind="linkTest()" ng-style="getColor()"> </h3>
         <h4 ng-if="displayMeaning === true" ng-bind="meaning()"></h4>
         <button type="button" class="btn btn-lg btn-outline" ng-click="showHint()" ng-if="hint === false && state === 'show'">Hint</button>
         <h4 ng-if="hint === true" ng-bind="getHint()"></h4>
@@ -70,12 +73,12 @@
 </div>
 <div class="row clearfix fixed-footer" ng-if="state === 'answer'">
   <div class="col-md-4 col-xs-6">
-    <button type="button" class="btn btn-lg btn-danger" ng-click="submitAnswer('incorrect')"><i class="fa fa-times"></i></button>
+    <button type="button" class="btn btn-lg btn-danger" ng-click="submitAnswer('incorrect')">x</button>
   </div>
   <div class="col-md-4 hidden-xs hidden-sm">
     <button type="button" class="btn btn-lg btn-warning" ng-click="undo()" ng-disabled="currentPosition === 0">Undo</button>
   </div>
   <div class="col-md-4 col-xs-6">
-    <button type="button" class="btn btn-lg btn-success" ng-click="submitAnswer('correct')"><i class="fa fa-check "></i></button>
+    <button type="button" class="btn btn-lg btn-success" ng-click="submitAnswer('correct')">✓</button>
   </div>
 </div>

@@ -1,24 +1,37 @@
 <div class="results-bg" data-bg="img/cover-smile.jpg"></div>
-<div class="overlay" ng-hide="state === 'end'"> </div>
+<div class="overlay" ng-hide="state === 'end'"></div>
 
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation" >
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <a class="navbar-brand" ng-href="#/memorize/{{id}}">{{id}}</a>
+      <a class="navbar-brand" ng-href="#/memorize/{{id}}">Back - {{id}}</a>
     </div>
   </div>
 </div>
 
 <div class="container-fluid results">
-  <div class="row clearfix">
+  <div class="row">
     <div class="col-md-12">
-      <a ng-click="exportQuizlet()" class="btn full-width" ng-class="buttonColor">{{quizletText}}</a>
+      <a ng-click="exportQuizlet()" class="btn full-width btn-lg" ng-class="buttonColor">{{quizletText}}</a>
     </div>
   </div>
-  <h3 class="modal-title">Things you need to work on:</h3>
-  <ul>
-    <li ng-repeat="item in incorrect">
-      <span ng-bind="item.previous"></span> -> <span ng-bind="item.next"></span>
-    </li>
-  </ul>
+  <br/>
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table table-bordered ">
+        <th>Previous Verse</th>
+        <th>Next Verse</th>
+        <tr ng-repeat="item in incorrect">
+          <td ng-bind="item.previous"></td>
+          <td ng-bind="item.next"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <br/>
+  <div class="row">
+    <div class="col-md-12">
+      <a ng-click="exportQuizlet()" class="btn full-width btn-lg" ng-class="buttonColor">{{quizletText}}</a>
+    </div>
+  </div>
 </div>

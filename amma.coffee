@@ -85,6 +85,11 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
         description: 'Show Hint'
         callback: () -> $scope.showHint()
       })
+      .add({
+        combo: 'e'
+        description: 'Empty History'
+        callback: () -> $scope.emptyHistory()
+      })
 
   bindHotkeys()
   # wakeup sleeing heroku
@@ -99,12 +104,33 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
   incorrect = storage[id]["incorrect"]
   $scope.currentPosition = storage[id]["currentPosition"]
   $scope.displayMeaning = storage[id]["displayMeaning"]
+  colors = {}
+  $scope.emptyHistory = ->
+    storage.historyReset = (new Date).getTime()
+    storage[id].historyData = {
+      historyLength: 0
+      maxHistoryLength: 15
+      history: {}
+    }
+    for i in [0...$scope.listToLearn.length]
+      storage[id].historyData.history[i] = 0
+    history = new History(storage[id].historyData)
+    colors = history.colors()
+    $scope.$apply()
+
+  createHistory = ->
+    if not storage[id].historyData? or not storage.historyReset? or storage.historyReset < 1409511179962
+      $scope.emptyHistory()
+    history = new History(storage[id].historyData)
+    colors = history.colors()
 
   if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > 1408729273829
     $scope.listToLearn = storage[id].listToLearn
     $scope.listOfMeaning = storage[id].listOfMeaning
     $scope.title = storage[id].title
-    $scope.state = "show"    
+    $scope.state = "show"
+    createHistory()
+
   else
     $http.get("learn/#{$routeParams.itemId}.json").success (data) ->
       storage.lastUpdate = (new Date).getTime()
@@ -115,10 +141,19 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
       $scope.listOfMeaning = data.listOfMeaning
       $scope.title = data.title
       $scope.state = "show"
+      createHistory()
 
-  endAudio = new Audio("sounds/3oms.mp3")
+
+  $scope.getColor = ->
+    {
+      "color": colors[$scope.currentPosition]
+    }
+
 
   $scope.showAnswer = () ->
+    console.log $scope.currentPosition + 2 < $scope.listToLearn.length
+    if $scope.state is "end"
+      $location.path "results/#{id}"
     $scope.state = "answer"
 
   $scope.toggleMeaning = () ->
@@ -132,7 +167,6 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
       $scope.state = "show"
     else
       $scope.state = "end"
-      endAudio.play()
 
   $scope.showHint = () ->
     $scope.hint = true
@@ -208,15 +242,11 @@ app.controller "ResultsCtrl", ["$scope", "$localStorage", '$routeParams', '$http
     previous: state.listToLearn[id]
   }
   $scope.quizletText = "Export to Quizlet"
-  storage[$scope.id].restart = true
+  state.restart = true
   $http.get("http://amma-archana.herokuapp.com/page-does-not-exist")
-  if (not storage[$scope.id].history?)
-    storage[$scope.id].history = {}
   now = new Date()
-  history = storage[$scope.id].history
-  history[now] = {
-    incorrect: state.incorrect.slice 0    
-  }
+  history = new History(state.historyData)
+  history.add(state.incorrect)
 
   $scope.exportQuizlet = () ->
     if (not $scope.quizletUrl?)
@@ -229,21 +259,17 @@ app.controller "ResultsCtrl", ["$scope", "$localStorage", '$routeParams', '$http
           "allow_discussion": 0
           "visibility": "public"
         }).success (data) ->
-          history[now].quizletUrl = data["url"]
-          console.log data
           $scope.buttonColor = "btn-success"
           $scope.quizletUrl = data["url"]
           $scope.quizletText = "Checkout your deck!"
-          console.log data["url"]
         .error () ->
           $scope.buttonColor = "btn-danger"
           $scope.quizletUrl = ""
-          $scope.quizletText = "Could not create deck. Please copy result and learn on your own."
+          $scope.quizletText = "Could not create deck. Mistakes will be colored in next run."
     else
       $window.open($scope.quizletUrl)
 
   today = () ->
     dateFilter new Date(), "MMM dd yyyy"
 ]
-
 

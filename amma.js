@@ -46,7 +46,7 @@ app.controller("ItemListerCtrl", [
 
 app.controller("MemorizeCtrl", [
   "$scope", '$routeParams', '$http', "$location", '$localStorage', 'hotkeys', function($scope, $routeParams, $http, $location, storage, hotkeys) {
-    var bindHotkeys, endAudio, id, incorrect, nextInLink, nextState, previousInLink;
+    var bindHotkeys, colors, createHistory, id, incorrect, nextInLink, nextState, previousInLink;
     id = "" + $routeParams.itemId;
     $scope.state = "loading";
     $scope.hint = false;
@@ -99,6 +99,12 @@ app.controller("MemorizeCtrl", [
         callback: function() {
           return $scope.showHint();
         }
+      }).add({
+        combo: 'e',
+        description: 'Empty History',
+        callback: function() {
+          return $scope.emptyHistory();
+        }
       });
     };
     bindHotkeys();
@@ -112,11 +118,36 @@ app.controller("MemorizeCtrl", [
     incorrect = storage[id]["incorrect"];
     $scope.currentPosition = storage[id]["currentPosition"];
     $scope.displayMeaning = storage[id]["displayMeaning"];
+    colors = {};
+    $scope.emptyHistory = function() {
+      var history, i, _i, _ref;
+      storage.historyReset = (new Date).getTime();
+      storage[id].historyData = {
+        historyLength: 0,
+        maxHistoryLength: 15,
+        history: {}
+      };
+      for (i = _i = 0, _ref = $scope.listToLearn.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+        storage[id].historyData.history[i] = 0;
+      }
+      history = new History(storage[id].historyData);
+      colors = history.colors();
+      return $scope.$apply();
+    };
+    createHistory = function() {
+      var history;
+      if ((storage[id].historyData == null) || (storage.historyReset == null) || storage.historyReset < 1409511179962) {
+        $scope.emptyHistory();
+      }
+      history = new History(storage[id].historyData);
+      return colors = history.colors();
+    };
     if ((storage[id].listToLearn != null) && (storage.lastUpdate != null) && storage.lastUpdate > 1408729273829) {
       $scope.listToLearn = storage[id].listToLearn;
       $scope.listOfMeaning = storage[id].listOfMeaning;
       $scope.title = storage[id].title;
       $scope.state = "show";
+      createHistory();
     } else {
       $http.get("learn/" + $routeParams.itemId + ".json").success(function(data) {
         storage.lastUpdate = (new Date).getTime();
@@ -126,11 +157,20 @@ app.controller("MemorizeCtrl", [
         $scope.listToLearn = data.listToLearn;
         $scope.listOfMeaning = data.listOfMeaning;
         $scope.title = data.title;
-        return $scope.state = "show";
+        $scope.state = "show";
+        return createHistory();
       });
     }
-    endAudio = new Audio("sounds/3oms.mp3");
+    $scope.getColor = function() {
+      return {
+        "color": colors[$scope.currentPosition]
+      };
+    };
     $scope.showAnswer = function() {
+      console.log($scope.currentPosition + 2 < $scope.listToLearn.length);
+      if ($scope.state === "end") {
+        $location.path("results/" + id);
+      }
       return $scope.state = "answer";
     };
     $scope.toggleMeaning = function() {
@@ -143,8 +183,7 @@ app.controller("MemorizeCtrl", [
         storage[id]["currentPosition"] = $scope.currentPosition;
         return $scope.state = "show";
       } else {
-        $scope.state = "end";
-        return endAudio.play();
+        return $scope.state = "end";
       }
     };
     $scope.showHint = function() {
@@ -252,16 +291,11 @@ app.controller("ResultsCtrl", [
       };
     });
     $scope.quizletText = "Export to Quizlet";
-    storage[$scope.id].restart = true;
+    state.restart = true;
     $http.get("http://amma-archana.herokuapp.com/page-does-not-exist");
-    if (storage[$scope.id].history == null) {
-      storage[$scope.id].history = {};
-    }
     now = new Date();
-    history = storage[$scope.id].history;
-    history[now] = {
-      incorrect: state.incorrect.slice(0)
-    };
+    history = new History(state.historyData);
+    history.add(state.incorrect);
     $scope.exportQuizlet = function() {
       if ($scope.quizletUrl == null) {
         return $http.post("http://amma-archana.herokuapp.com/quizlet.php", {
@@ -277,16 +311,13 @@ app.controller("ResultsCtrl", [
           "allow_discussion": 0,
           "visibility": "public"
         }).success(function(data) {
-          history[now].quizletUrl = data["url"];
-          console.log(data);
           $scope.buttonColor = "btn-success";
           $scope.quizletUrl = data["url"];
-          $scope.quizletText = "Checkout your deck!";
-          return console.log(data["url"]);
+          return $scope.quizletText = "Checkout your deck!";
         }).error(function() {
           $scope.buttonColor = "btn-danger";
           $scope.quizletUrl = "";
-          return $scope.quizletText = "Could not create deck. Please copy result and learn on your own.";
+          return $scope.quizletText = "Could not create deck. Mistakes will be colored in next run.";
         });
       } else {
         return $window.open($scope.quizletUrl);
