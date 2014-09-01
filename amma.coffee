@@ -146,12 +146,11 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
 
   $scope.getColor = ->
     {
-      "color": colors[$scope.currentPosition]
+      "color": if $scope.state is "show" then colors[$scope.currentPosition] else "#eee"
     }
 
 
   $scope.showAnswer = () ->
-    console.log $scope.currentPosition + 2 < $scope.listToLearn.length
     if $scope.state is "end"
       $location.path "results/#{id}"
     $scope.state = "answer"

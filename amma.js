@@ -163,11 +163,10 @@ app.controller("MemorizeCtrl", [
     }
     $scope.getColor = function() {
       return {
-        "color": colors[$scope.currentPosition]
+        "color": $scope.state === "show" ? colors[$scope.currentPosition] : "#eee"
       };
     };
     $scope.showAnswer = function() {
-      console.log($scope.currentPosition + 2 < $scope.listToLearn.length);
       if ($scope.state === "end") {
         $location.path("results/" + id);
       }
