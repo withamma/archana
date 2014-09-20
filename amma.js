@@ -17,6 +17,9 @@ app.config(function($routeProvider) {
   }).when("/memorize/:itemId", {
     controller: "MemorizeCtrl",
     templateUrl: "templates/test.template.html"
+  }).when("/learn/:itemId", {
+    controller: "LearnCtrl",
+    templateUrl: "templates/learn.template.html"
   }).when("/howto/:itemId", {
     controller: "HowtoCtrl",
     templateUrl: "templates/howto.template.html"
@@ -274,6 +277,34 @@ app.controller("HowtoCtrl", [
       storage["howtoCompleted"] = true;
       return $location.path("/memorize/" + $routeParams.itemId);
     };
+  }
+]);
+
+app.controller("LearnCtrl", [
+  "$scope", "$localStorage", "$routeParams", "$http", "hotkeys", function($scope, storage, $routeParams, $http, hotkeys) {
+    $scope.currentPosition = 0;
+    $scope.state = "show";
+    $http.get("learn/" + $routeParams.itemId + ".json").success(function(data) {
+      $scope.listToLearn = data.listToLearn;
+      $scope.listOfMeaning = data.listOfMeaning;
+      return $scope.title = data.title;
+    });
+    $scope.verse = function() {
+      return $scope.listToLearn[$scope.currentPosition];
+    };
+    $scope.meaning = function() {
+      return $scope.listOfMeaning[$scope.currentPosition];
+    };
+    $scope.next = function() {
+      return $scope.currentPosition += 1;
+    };
+    return hotkeys.bindTo($scope).add({
+      combo: 'space',
+      description: 'Next',
+      callback: function() {
+        return $scope.next();
+      }
+    });
   }
 ]);
 

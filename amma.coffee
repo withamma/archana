@@ -20,6 +20,9 @@ app.config(($routeProvider) ->
   ).when("/memorize/:itemId",
     controller: "MemorizeCtrl"
     templateUrl: "templates/test.template.html"
+  ).when("/learn/:itemId",
+    controller: "LearnCtrl"
+    templateUrl: "templates/learn.template.html"
   ).when("/howto/:itemId",
     controller: "HowtoCtrl"
     templateUrl: "templates/howto.template.html"
@@ -38,7 +41,7 @@ app.controller "ItemListerCtrl", ["$scope", "$http", "$sessionStorage", ($scope,
   # wakeup sleeing heroku
   $http.get("http://amma-archana.herokuapp.com/page-does-not-exist")
 ]
- 
+
 app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", '$localStorage', 'hotkeys', ($scope, $routeParams, $http, $location, storage, hotkeys) ->
   id = "#{$routeParams.itemId}"
   $scope.state = "loading"
@@ -231,6 +234,29 @@ app.controller "HowtoCtrl", ["$scope", "$sessionStorage", '$routeParams', '$loca
     storage["howtoCompleted"] = true
     $location.path "/memorize/#{$routeParams.itemId}"
 ]
+
+app.controller "LearnCtrl", ["$scope", "$localStorage", "$routeParams", "$http", "hotkeys", ($scope, storage, $routeParams, $http, hotkeys)->
+  $scope.currentPosition = 0
+  $scope.state = "show"
+  $http.get("learn/#{$routeParams.itemId}.json").success (data) ->
+    $scope.listToLearn = data.listToLearn
+    $scope.listOfMeaning = data.listOfMeaning
+    $scope.title = data.title
+  $scope.verse = -> 
+    $scope.listToLearn[$scope.currentPosition]
+  $scope.meaning = -> 
+    $scope.listOfMeaning[$scope.currentPosition]
+  $scope.next = () ->
+    $scope.currentPosition += 1
+  hotkeys.bindTo($scope)
+    .add({
+      combo: 'space'
+      description: 'Next'
+      callback: () -> $scope.next()
+    })
+
+]
+
 
 app.controller "ResultsCtrl", ["$scope", "$localStorage", '$routeParams', '$http','dateFilter',"$window", ($scope, storage, $routeParams, $http, dateFilter, $window) ->
   $scope.id = "#{$routeParams.itemId}"
