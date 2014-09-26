@@ -246,9 +246,9 @@ app.controller "LearnCtrl", ["$scope", "$localStorage", "$routeParams", "$http",
     $scope.listToLearn[$scope.currentPosition]
   $scope.meaning = -> 
     $scope.listOfMeaning[$scope.currentPosition]
-  $scope.next = () ->
+  $scope.next = ->
     $scope.currentPosition += 1
-  $scope.prev = () ->
+  $scope.prev = ->
     $scope.currentPosition -= 1
   hotkeys.bindTo($scope)
     .add({
