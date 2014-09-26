@@ -1,5 +1,3 @@
-
-
 <div full-cover-image="img/flower-bg.jpg"  ng-hide="state === 'end'"></div>
 <div class="overlay" ng-hide="state === 'end'" ng-swipe-left="undo()"></div>
 <div full-cover-image="img/creator.jpg"  ng-show="state === 'end'" ng-click="showResults()"></div>
@@ -18,7 +16,7 @@
     <div class="collapse navbar-collapse" collapse="isCollapsed" ng-class="!isCollapsed && 'in'" ng-click="isCollapsed=true">
       <ul class="nav navbar-nav">
         <li>
-          <a ng-href="#">Home</a>
+          <a ng-href="#/">Home</a>
         </li>
         <li>
           <a ng-click="toggleMeaning()">Toggle Meaning</a>

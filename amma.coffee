@@ -248,6 +248,8 @@ app.controller "LearnCtrl", ["$scope", "$localStorage", "$routeParams", "$http",
     $scope.listOfMeaning[$scope.currentPosition]
   $scope.next = () ->
     $scope.currentPosition += 1
+  $scope.prev = () ->
+    $scope.currentPosition -= 1
   hotkeys.bindTo($scope)
     .add({
       combo: 'space'

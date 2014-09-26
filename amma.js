@@ -298,6 +298,9 @@ app.controller("LearnCtrl", [
     $scope.next = function() {
       return $scope.currentPosition += 1;
     };
+    $scope.prev = function() {
+      return $scope.currentPosition -= 1;
+    };
     return hotkeys.bindTo($scope).add({
       combo: 'space',
       description: 'Next',
