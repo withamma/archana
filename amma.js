@@ -32,18 +32,13 @@ app.config(function($routeProvider) {
 });
 
 app.controller("ItemListerCtrl", [
-  "$scope", "$http", "$sessionStorage", function($scope, $http, sessionStorage) {
+  "$scope", "$http", function($scope, $http) {
     $http.get("learning-items.json").success(function(data) {
       return $scope.items = data;
     });
-    $scope.url = function(id) {
-      if ((sessionStorage["howtoCompleted"] != null)) {
-        return "#/memorize/" + id;
-      } else {
-        return "#/howto/" + id;
-      }
+    return $scope.url = function(id) {
+      return "#/howto/" + id;
     };
-    return $http.get("http://amma-archana.herokuapp.com/page-does-not-exist");
   }
 ]);
 
@@ -111,7 +106,6 @@ app.controller("MemorizeCtrl", [
       });
     };
     bindHotkeys();
-    $http.get("http://amma-archana.herokuapp.com/page-does-not-exist");
     if (storage[id] == null) {
       storage[id] = {};
       storage[id]["currentPosition"] = 0;
@@ -273,8 +267,10 @@ app.controller("MemorizeCtrl", [
 
 app.controller("HowtoCtrl", [
   "$scope", "$sessionStorage", '$routeParams', '$location', function($scope, storage, $routeParams, $location) {
-    return $scope["continue"] = function() {
-      storage["howtoCompleted"] = true;
+    $scope.learn = function() {
+      return $location.path("/learn/" + $routeParams.itemId);
+    };
+    return $scope.memorize = function() {
       return $location.path("/memorize/" + $routeParams.itemId);
     };
   }
@@ -282,13 +278,41 @@ app.controller("HowtoCtrl", [
 
 app.controller("LearnCtrl", [
   "$scope", "$localStorage", "$routeParams", "$http", "hotkeys", function($scope, storage, $routeParams, $http, hotkeys) {
+    var colors, createHistory, id;
     $scope.currentPosition = 0;
     $scope.state = "show";
-    $http.get("learn/" + $routeParams.itemId + ".json").success(function(data) {
-      $scope.listToLearn = data.listToLearn;
-      $scope.listOfMeaning = data.listOfMeaning;
-      return $scope.title = data.title;
-    });
+    colors = {};
+    id = "" + $routeParams.itemId;
+    if (storage[id] == null) {
+      storage[id] = {};
+      storage[id]["currentPosition"] = 0;
+      storage[id]["displayMeaning"] = false;
+    }
+    createHistory = function() {
+      var history;
+      history = new History(storage[id].historyData);
+      return colors = history.colors();
+    };
+    if ((storage[id].listToLearn != null) && (storage.lastUpdate != null) && storage.lastUpdate > 1408729273829) {
+      $scope.listToLearn = storage[id].listToLearn;
+      $scope.listOfMeaning = storage[id].listOfMeaning;
+      $scope.title = storage[id].title;
+      $scope.state = "show";
+      createHistory();
+    } else {
+      $http.get("learn/" + $routeParams.itemId + ".json").success(function(data) {
+        $scope.listToLearn = data.listToLearn;
+        $scope.listOfMeaning = data.listOfMeaning;
+        $scope.title = data.title;
+        $scope.state = "show";
+        return createHistory();
+      });
+    }
+    $scope.getColor = function() {
+      return {
+        "color": colors[$scope.currentPosition]
+      };
+    };
     $scope.verse = function() {
       return $scope.listToLearn[$scope.currentPosition];
     };
@@ -325,7 +349,6 @@ app.controller("ResultsCtrl", [
     });
     $scope.quizletText = "Export to Quizlet";
     state.restart = true;
-    $http.get("http://amma-archana.herokuapp.com/page-does-not-exist");
     now = new Date();
     history = new History(state.historyData);
     history.add(state.incorrect);

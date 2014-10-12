@@ -32,14 +32,12 @@ app.config(($routeProvider) ->
   ).otherwise redirectTo: "/")
 
 
-app.controller "ItemListerCtrl", ["$scope", "$http", "$sessionStorage", ($scope, $http, sessionStorage) ->
+app.controller "ItemListerCtrl", ["$scope", "$http", ($scope, $http) ->
   $http.get("learning-items.json").success (data) ->
     $scope.items = data
 
   $scope.url = (id) ->
-    if (sessionStorage["howtoCompleted"]?) then "#/memorize/#{id}" else "#/howto/#{id}"
-  # wakeup sleeing heroku
-  $http.get("http://amma-archana.herokuapp.com/page-does-not-exist")
+    "#/howto/#{id}"
 ]
 
 app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", '$localStorage', 'hotkeys', ($scope, $routeParams, $http, $location, storage, hotkeys) ->
@@ -95,8 +93,6 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
       })
 
   bindHotkeys()
-  # wakeup sleeing heroku
-  $http.get("http://amma-archana.herokuapp.com/page-does-not-exist")
 
   if not storage[id]?
     storage[id] = {}
@@ -230,18 +226,46 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
 ]
 
 app.controller "HowtoCtrl", ["$scope", "$sessionStorage", '$routeParams', '$location', ($scope, storage, $routeParams, $location) ->
-  $scope.continue = () ->
-    storage["howtoCompleted"] = true
+  $scope.learn = () ->
+    $location.path "/learn/#{$routeParams.itemId}"
+  $scope.memorize = () ->
     $location.path "/memorize/#{$routeParams.itemId}"
 ]
 
 app.controller "LearnCtrl", ["$scope", "$localStorage", "$routeParams", "$http", "hotkeys", ($scope, storage, $routeParams, $http, hotkeys)->
   $scope.currentPosition = 0
   $scope.state = "show"
-  $http.get("learn/#{$routeParams.itemId}.json").success (data) ->
-    $scope.listToLearn = data.listToLearn
-    $scope.listOfMeaning = data.listOfMeaning
-    $scope.title = data.title
+  colors = {}
+
+  id = "#{$routeParams.itemId}"
+  if not storage[id]?
+    storage[id] = {}
+    storage[id]["currentPosition"] = 0
+    storage[id]["displayMeaning"] = false
+
+  createHistory = ->
+    history = new History(storage[id].historyData)
+    colors = history.colors()
+
+  if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > 1408729273829
+    $scope.listToLearn = storage[id].listToLearn
+    $scope.listOfMeaning = storage[id].listOfMeaning
+    $scope.title = storage[id].title
+    $scope.state = "show"
+    createHistory()
+  else
+    $http.get("learn/#{$routeParams.itemId}.json").success (data) ->
+      $scope.listToLearn = data.listToLearn
+      $scope.listOfMeaning = data.listOfMeaning
+      $scope.title = data.title
+      $scope.state = "show"
+      createHistory()
+
+  $scope.getColor = ->
+    {
+      "color": colors[$scope.currentPosition]
+    }
+
   $scope.verse = -> 
     $scope.listToLearn[$scope.currentPosition]
   $scope.meaning = -> 
@@ -270,7 +294,6 @@ app.controller "ResultsCtrl", ["$scope", "$localStorage", '$routeParams', '$http
   }
   $scope.quizletText = "Export to Quizlet"
   state.restart = true
-  $http.get("http://amma-archana.herokuapp.com/page-does-not-exist")
   now = new Date()
   history = new History(state.historyData)
   history.add(state.incorrect)

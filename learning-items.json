@@ -17,5 +17,18 @@
         "title": "1000 names of Devi Stotram (English w/ meaning option)",
         "description": "Learn the compressed version of the 1000 names of devi. 'Devi will always protect those who chant the Lalitā Sahasranāma with devotion every day. They will never face a shortage of food and basic necessities, and will also gain spiritual growth.' - Amma",
         "image": "img/1000-stotram.jpg"
+    },
+    {
+        "id": "arati",
+        "title": "Arati for  Mata Amritanandamayi",
+        "description": "Learn the compressed version of the 1000 names of devi. 'Devi will always protect those who chant the Lalitā Sahasranāma with devotion every day. They will never face a shortage of food and basic necessities, and will also gain spiritual growth.' - Amma",
+        "image": "img/arati.jpg"
+    },
+    {
+        "id": "sri-mahisasuramardini-stotram",
+        "title": "Śrī Mahiṣāsuramardini Stotram",
+        "description": "Hymn to Her, who killed the buffalo demon",
+        "image": "img/durga.jpg"
     }
+    
 ]

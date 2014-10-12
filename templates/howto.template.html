@@ -1,33 +1,30 @@
-<div class="container">
+<div class="container-fluid">
 	<div class="row">
 		<div class="col-xs-12">
 			<h1>How To</h1>
-			<p>Welcome to Archana By Heart! This will help you find where you make mistakes while doing archana. It will catch if you skip one verse and then show you at the end all of the verses you skipped.</p>
-			<p>How does it work? It's simple. When you start you will see the first verse. State the following verse and click Next. The following verse will be shown. Now mark if the verse you see matches the verse you remembered. Now you can indicate whether you got it <strong>right (green)</strong> or <strong>wrong (red)</strong>. If you need to go back, you can undo by clicking the <strong>yellow button</strong> or <strong>swipe left on the screen if you're on a phone</strong>.</p>
+			<p>Welcome to Archana By Heart! This will help you find where you make mistakes while doing archana. </p>
+			<p>How does it work? It's simple. When you start you will see the first
+      verse. State the following verse and click Next. The following verse will
+      be shown. Now mark if the verse you see matches the verse you remembered.
+      <strong>Right (green)</strong> or <strong>Wrong (red)</strong>. If you need to go back, you can undo by clicking the <strong>yellow button</strong> or <strong>swipe left on the screen if you're on a phone</strong>.</p>
+      <p>The <strong> REALLY COOL </strong> thing is that once you go through
+      memorize once, it knows what you missed. Next time you do either learn or
+      memorize, you will see the verses <strong> COLORED </strong>. Red means
+      you got the <strong> NEXT verse </strong>wrong so go <strong> slow </strong>. </p>
 			<p>After you are done. You can generate a quizlet deck. You don't need a quizlet account, however if you have one, feel free to copy the deck to your own account.</p>
 
 			<p>If you are on a computer - be sure to checkout the keyboard shortcuts. Simply type ? (Shift + /) to see avilable shortcuts.</p>
 
 			<p>May Amma's grace be with you =)</p>
-<!-- 			<p>How does it work?</p>
-			<ol>
-				<li>See Question mark</li>
-				<li>Say verse <strong>_From Memory_</strong></li>
-				<li>Click <strong>Check</strong> to see actual answer</li>
-				<li>If answer was correct, click green checkmark, else click red x (Your wrong answers are recorded)</li>
-				<li class="hidden-xs hidden-sm">There are keyboard shortcuts on the test page. <strong>Press ? to see them</strong></li>
-				<li>If you accidently clicked wrong button, <span class="hidden-xs hidden-sm">click undo button</span><span class="hidden-md hidden-lg"><strong>swipe left on the screen if you're on a phone</strong></span></li>
-				<li>Repeat until all names are finished</li>
-				<li>Follow link to see results</li>
-				<li>Export Missed results to quizlet (don't need quizlet account - if you have one you can copy the cards to your deck)</li>
-			</ol>
-			<p>May Amma's grace be with you =)</p> -->
 		</div>
 	</div>
-</div>
-
-<div class="container fixed-footer">
-  <div class="col-xs-12">
-	<button type="button" class="btn btn-lg btn-success" ng-click="continue()">Continue</button>
+  <div class="row">
+      <div class="col-xs-6">
+          <button type="button" class="btn btn-lg btn-success btn-block" ng-click="learn()">Learn</button>
+      </div>
+      <div class="col-xs-6">
+          <button type="button" class="btn btn-lg btn-success btn-block"
+              ng-click="memorize()">Memorize</button>
+      </div>
   </div>
 </div>
