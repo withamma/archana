@@ -31,8 +31,8 @@
     <div class="row clearfix">
         <div class="col-md-12">
             <div class="text-center noselect answer">
-                <h3 ng-bind="verse()" ng-style="getColor()"></h3>
-                <h4 ng-if="displayMeaning === true" ng-bind="meaning()"></h4>
+                <h3 ng-bind-html="verse()" ng-style="getColor()"></h3>
+                <h4 ng-if="displayMeaning === true" ng-bind-html="meaning()"></h4>
             </div>
         </div>
     </div>

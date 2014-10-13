@@ -5,6 +5,7 @@ app = angular.module("linear-learning", [
   'ngTouch'
   'cfp.hotkeys'
   'ngAnimate'
+  'ngSanitize'
 ])
 
 app.directive "fullCoverImage", ->
@@ -190,9 +191,9 @@ app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", 
   $scope.linkTest = () ->
     if ($scope.state is "loading")
       return "Loading"
-    else if ($scope.state is "answer") 
+    else if ($scope.state is "answer")
       return nextInLink()
-    else 
+    else
       return previousInLink()
 
   $scope.meaning = () ->
