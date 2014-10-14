@@ -34,11 +34,9 @@ app.config(function($routeProvider) {
 app.controller("ItemListerCtrl", [
   "$scope", "$http", function($scope, $http) {
     $http.get("learning-items.json").success(function(data) {
-      return $scope.items = data;
+      $scope.items = data;
+      console.log(data);
     });
-    return $scope.url = function(id) {
-      return "#/howto/" + id;
-    };
   }
 ]);
 

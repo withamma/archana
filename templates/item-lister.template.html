@@ -6,8 +6,8 @@
     <div class="col-md-10">
         <div class="masonry">
             <div class="thumbnail item" ng-repeat="item in items">
-              <a ng-href="{{url(item.id)}}" class="thumb"><img ng-src="{{item.image}}"></a>
-              <a ng-href="{{url(item.id)}}">{{item.title}}</a>
+              <a ng-href="{{'#/howto/' + item.id}}" class="thumb"><img ng-src="{{item.image}}"></a>
+              <a ng-href="{{'#/howto/' + item.id}}">{{item.title}}</a>
               <p>{{item.description}}</p>
             </div> 
         </div>

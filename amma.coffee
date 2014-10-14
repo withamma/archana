@@ -36,9 +36,6 @@ app.config(($routeProvider) ->
 app.controller "ItemListerCtrl", ["$scope", "$http", ($scope, $http) ->
   $http.get("learning-items.json").success (data) ->
     $scope.items = data
-
-  $scope.url = (id) ->
-    "#/howto/#{id}"
 ]
 
 app.controller "MemorizeCtrl", ["$scope", '$routeParams', '$http', "$location", '$localStorage', 'hotkeys', ($scope, $routeParams, $http, $location, storage, hotkeys) ->
