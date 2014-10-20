@@ -2,15 +2,36 @@
 var History;
 
 History = (function() {
-  function History(historyData) {
-    this.historyData = historyData;
+  function History($localStorage, $routeParams, historyExpiration) {
+    var id;
+    id = $routeParams.itemId;
+    this.clear = function() {
+      $localStorage.historyReset = (new Date).getTime();
+      if ($localStorage[id] == null) {
+        $localStorage[id] = {};
+      }
+      return $localStorage[id].historyData = {
+        historyLength: 0,
+        maxHistoryLength: 15,
+        history: {}
+      };
+    };
+    if (($localStorage[id] == null) || ($localStorage[id].historyData == null) || ($localStorage.historyReset == null) || $localStorage.historyReset < historyExpiration) {
+      this.clear();
+    }
+    this.historyData = $localStorage[id].historyData;
+    console.log(this.historyData);
   }
 
   History.prototype.add = function(listOfIncorrect) {
     var i, j, _i, _j, _len, _len1, _ref, _results;
+    console.log(listOfIncorrect);
     this.historyData.historyLength += 1;
     for (_i = 0, _len = listOfIncorrect.length; _i < _len; _i++) {
       i = listOfIncorrect[_i];
+      if (this.historyData.history[i] == null) {
+        this.historyData.history[i] = 0;
+      }
       this.historyData.history[i] += 1;
     }
     if (this.historyData.historyLength >= this.historyData.maxHistoryLength) {
@@ -30,19 +51,13 @@ History = (function() {
   };
 
   History.prototype.colors = function() {
-    var cssColor, i, wrong, _ref, _ref1;
+    var cssColor, i, wrong, _ref;
     cssColor = {};
     if (this.historyData.historyLength > 0) {
       _ref = this.historyData.history;
       for (i in _ref) {
         wrong = _ref[i];
-        cssColor[i] = "hsl(" + (116 * (1 - (wrong / this.historyData.historyLength))) + ", 100%, 45%)";
-      }
-    } else {
-      _ref1 = this.historyData.history;
-      for (i in _ref1) {
-        wrong = _ref1[i];
-        cssColor[i] = "#eee";
+        cssColor[i] = "hsla(" + (116 * (1 - (wrong / this.historyData.historyLength))) + ", 100%, 45%, .4)";
       }
     }
     return cssColor;

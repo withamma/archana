@@ -39,18 +39,10 @@
 
 
 <div class="container" ng-swipe-left="undo()">
-<!--   <div class="row clearfix">
-    <div class="col-md-12">
-      <div class="text-center noselect question">
-        <h3  ng-hide="state === 'end'" ng-bind="linkPrevious()"> </h3>
-        <h4 ng-show="listMeaning && displayMeaning" ng-bind="meaningPrevious()"></h4>
-      </div>
-    </div>
-  </div> -->
   <div class="row clearfix">
     <div class="col-md-12">
       <div class="text-center noselect answer">
-        <h3  ng-hide="state === 'end'" ng-bind-html="linkTest()" ng-style="getColor()"> </h3>
+          <h3  ng-hide="state === 'end'" ng-bind-html="linkTest()" ng-style="getColor()"> </h3>
         <h4 ng-if="displayMeaning === true" ng-bind-html="meaning()"></h4>
         <button type="button" class="btn btn-lg btn-outline" ng-click="showHint()" ng-if="hint === false && state === 'show'">Hint</button>
         <h4 ng-if="hint === true" ng-bind-html="getHint()"></h4>
