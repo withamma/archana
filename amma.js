@@ -47,7 +47,7 @@ app.service("HistoryService", ["$localStorage", "$routeParams", "historyExpirati
 
 app.controller("MemorizeCtrl", [
   "$scope", '$routeParams', '$http', "$location", '$localStorage', 'hotkeys', 'HistoryService', function($scope, $routeParams, $http, $location, storage, hotkeys, history) {
-    var bindHotkeys, colors, createHistory, id, incorrect, nextInLink, nextState, previousInLink;
+    var bindHotkeys, colors, id, incorrect, nextInLink, nextState, previousInLink;
     id = "" + $routeParams.itemId;
     $scope.state = "loading";
     $scope.hint = false;
@@ -121,10 +121,6 @@ app.controller("MemorizeCtrl", [
     colors = {};
     $scope.emptyHistory = function() {
       history.clear();
-      colors = history.colors();
-      return $scope.$apply();
-    };
-    createHistory = function() {
       return colors = history.colors();
     };
     $scope.home = function() {
@@ -135,7 +131,7 @@ app.controller("MemorizeCtrl", [
       $scope.listOfMeaning = storage[id].listOfMeaning;
       $scope.title = storage[id].title;
       $scope.state = "show";
-      createHistory();
+      colors = history.colors();
     } else {
       $http.get("learn/" + $routeParams.itemId + ".json").success(function(data) {
         storage.lastUpdate = (new Date).getTime();
@@ -146,7 +142,7 @@ app.controller("MemorizeCtrl", [
         $scope.listOfMeaning = data.listOfMeaning;
         $scope.title = data.title;
         $scope.state = "show";
-        return createHistory();
+        return colors = history.colors();
       });
     }
     $scope.getColor = function() {
@@ -274,6 +270,10 @@ app.controller("LearnCtrl", [
     $scope.currentPosition = 0;
     $scope.state = "show";
     $scope.displayMeaning = false;
+    createHistory = function() {
+      var colors;
+      return colors = history.colors();
+    };
     colors = {};
     id = "" + $routeParams.itemId;
     if (storage[id] == null) {
@@ -292,22 +292,19 @@ app.controller("LearnCtrl", [
         return $scope.$apply();
       }
     };
-    createHistory = function() {
-      return colors = history.colors();
-    };
     if ((storage[id].listToLearn != null) && (storage.lastUpdate != null) && storage.lastUpdate > 1408729273829) {
       $scope.listToLearn = storage[id].listToLearn;
       $scope.listOfMeaning = storage[id].listOfMeaning;
       $scope.title = storage[id].title;
       $scope.state = "show";
-      createHistory();
+      colors = history.colors();
     } else {
       $http.get("learn/" + $routeParams.itemId + ".json").success(function(data) {
         $scope.listToLearn = data.listToLearn;
         $scope.listOfMeaning = data.listOfMeaning;
         $scope.title = data.title;
         $scope.state = "show";
-        return createHistory();
+        return colors = history.colors();
       });
     }
     $scope.getColor = function() {

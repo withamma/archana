@@ -113,10 +113,6 @@ $location, storage, hotkeys, history) ->
   $scope.emptyHistory = ->
     history.clear()
     colors = history.colors()
-    $scope.$apply()
-
-  createHistory = ->
-    colors = history.colors()
 
   $scope.home = ->
     $location.path "/"
@@ -126,7 +122,7 @@ $location, storage, hotkeys, history) ->
     $scope.listOfMeaning = storage[id].listOfMeaning
     $scope.title = storage[id].title
     $scope.state = "show"
-    createHistory()
+    colors = history.colors()
 
   else
     $http.get("learn/#{$routeParams.itemId}.json").success (data) ->
@@ -138,7 +134,7 @@ $location, storage, hotkeys, history) ->
       $scope.listOfMeaning = data.listOfMeaning
       $scope.title = data.title
       $scope.state = "show"
-      createHistory()
+      colors = history.colors()
 
 
   $scope.getColor = ->
@@ -235,6 +231,8 @@ app.controller "LearnCtrl", ["$scope", "$localStorage", "$routeParams", "$http",
   $scope.currentPosition = 0
   $scope.state = "show"
   $scope.displayMeaning = false
+  createHistory = ->
+    colors = history.colors()
   colors = {}
   id = "#{$routeParams.itemId}"
   if not storage[id]?
@@ -250,22 +248,21 @@ app.controller "LearnCtrl", ["$scope", "$localStorage", "$routeParams", "$http",
       $scope.currentPosition = location - 1
       $scope.isCollapsed=true
       $scope.$apply()
-  createHistory = ->
-    colors = history.colors()
+
 
   if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > 1408729273829
     $scope.listToLearn = storage[id].listToLearn
     $scope.listOfMeaning = storage[id].listOfMeaning
     $scope.title = storage[id].title
     $scope.state = "show"
-    createHistory()
+    colors = history.colors()
   else
     $http.get("learn/#{$routeParams.itemId}.json").success (data) ->
       $scope.listToLearn = data.listToLearn
       $scope.listOfMeaning = data.listOfMeaning
       $scope.title = data.title
       $scope.state = "show"
-      createHistory()
+      colors = history.colors()
 
   $scope.getColor = ->
     {
