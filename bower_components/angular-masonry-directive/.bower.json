@@ -1,0 +1,20 @@
+{
+  "name": "angular-masonry-directive",
+  "main": "./src/angular-masonry-directive.js",
+  "dependencies": {
+    "angular": "",
+    "masonry": "latest",
+    "imagesloaded": "latest"
+  },
+  "homepage": "https://github.com/klederson/angular-masonry-directive",
+  "_release": "dff830adef",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "dff830adef6648b9d085b1da729b54b50a0f9df4"
+  },
+  "_source": "git://github.com/klederson/angular-masonry-directive.git",
+  "_target": "*",
+  "_originalSource": "angular-masonry-directive",
+  "_direct": true
+}

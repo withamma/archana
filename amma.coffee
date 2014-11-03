@@ -6,6 +6,8 @@ app = angular.module("linear-learning", [
   'cfp.hotkeys'
   'ngAnimate'
   'ngSanitize'
+  'angulartics'
+  'angulartics.google.analytics'
 ])
 
 app.directive "fullCoverImage", ->
@@ -105,7 +107,7 @@ $location, storage, hotkeys, history) ->
     storage[id]["incorrect"] = []
 
   incorrect = storage[id]["incorrect"]
-  $scope.currentPosition = storage[id]["currentPosition"]
+  $scope.currentPosition = if storage[id]["currentPosition"]? then  storage[id]["currentPosition"] else 0
   $scope.displayMeaning = storage[id]["displayMeaning"]
   colors = {}
   $scope.emptyHistory = ->
@@ -232,6 +234,7 @@ app.controller "LearnCtrl", ["$scope", "$localStorage", "$routeParams", "$http",
   $scope.mobile = mobile
   $scope.currentPosition = 0
   $scope.state = "show"
+  $scope.displayMeaning = false
   colors = {}
   id = "#{$routeParams.itemId}"
   if not storage[id]?
@@ -241,6 +244,12 @@ app.controller "LearnCtrl", ["$scope", "$localStorage", "$routeParams", "$http",
   $scope.home = ->
     $location.path "/"
 
+  $scope.jumpTo = (location) ->
+    location= parseInt(location)
+    if location? and location < Object.keys($scope.listToLearn).length and location > 0
+      $scope.currentPosition = location - 1
+      $scope.isCollapsed=true
+      $scope.$apply()
   createHistory = ->
     colors = history.colors()
 
@@ -263,6 +272,9 @@ app.controller "LearnCtrl", ["$scope", "$localStorage", "$routeParams", "$http",
       "background-color": if $scope.state is "show" then colors[$scope.currentPosition] else "#eee"
     }
 
+  $scope.toggleMeaning = () ->
+    $scope.displayMeaning = !$scope.displayMeaning
+
   $scope.verse = -> 
     $scope.listToLearn[$scope.currentPosition]
   $scope.meaning = -> 
@@ -277,7 +289,6 @@ app.controller "LearnCtrl", ["$scope", "$localStorage", "$routeParams", "$http",
       description: 'Next'
       callback: () -> $scope.next()
     })
-
 ]
 
 

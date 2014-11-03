@@ -54,7 +54,7 @@
 .btn-outline {
     color: #fff;
     background-color: transparent;
-    border-color: #fff;
+    border-color: #eee;
 }
 
 .full-bg {
@@ -131,7 +131,6 @@
   margin: auto;
 }
 .question{
-  margin-top: 80px;
   border-bottom: 1px solid #eee;
 }
 .question,.answer{
@@ -143,8 +142,14 @@
   line-height: 2.1em;
   text-shadow: 0 1px 3px rgba(0, 0, 0, .5);
 }
-.answer {
+.answer h3,h4{
+  font-size: 29px;
+  background-color: rgba(0,0,0,.5);
+  border-radius: 25px;
   margin-top: 80px;
+  padding: 9px;
+}
+.answer {
   padding-bottom: 100px;
 }
 

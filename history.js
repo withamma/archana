@@ -2,47 +2,52 @@
 var History;
 
 History = (function() {
-  function History($localStorage, $routeParams, historyExpiration) {
+  function History(storage, state, historyExpiration) {
     var id;
-    id = $routeParams.itemId;
+    this.storage = storage;
+    this.state = state;
+    this.historyExpiration = historyExpiration;
+    id = this.state.itemId;
+    this.getHistoryData = function() {
+      console.log("loading history data for", this.state.itemId);
+      return this.storage[this.state.itemId].historyData;
+    };
     this.clear = function() {
-      $localStorage.historyReset = (new Date).getTime();
-      if ($localStorage[id] == null) {
-        $localStorage[id] = {};
+      storage.historyReset = (new Date).getTime();
+      if (storage[id] == null) {
+        storage[id] = {};
       }
-      return $localStorage[id].historyData = {
+      return storage[id].historyData = {
         historyLength: 0,
         maxHistoryLength: 15,
         history: {}
       };
     };
-    if (($localStorage[id] == null) || ($localStorage[id].historyData == null) || ($localStorage.historyReset == null) || $localStorage.historyReset < historyExpiration) {
+    if ((storage[id] == null) || (storage[id].historyData == null) || (storage.historyReset == null) || storage.historyReset < this.historyExpiration) {
       this.clear();
     }
-    this.historyData = $localStorage[id].historyData;
-    console.log(this.historyData);
   }
 
   History.prototype.add = function(listOfIncorrect) {
-    var i, j, _i, _j, _len, _len1, _ref, _results;
-    console.log(listOfIncorrect);
-    this.historyData.historyLength += 1;
+    var historyData, i, j, _i, _j, _len, _len1, _ref, _results;
+    historyData = this.getHistoryData();
+    historyData.historyLength += 1;
     for (_i = 0, _len = listOfIncorrect.length; _i < _len; _i++) {
       i = listOfIncorrect[_i];
-      if (this.historyData.history[i] == null) {
-        this.historyData.history[i] = 0;
+      if (historyData.history[i] == null) {
+        historyData.history[i] = 0;
       }
-      this.historyData.history[i] += 1;
+      historyData.history[i] += 1;
     }
-    if (this.historyData.historyLength >= this.historyData.maxHistoryLength) {
-      this.historyData.historyLength -= 1;
+    if (historyData.historyLength >= historyData.maxHistoryLength) {
+      historyData.historyLength -= 1;
     }
-    _ref = this.historyData.history;
+    _ref = historyData.history;
     _results = [];
     for (j = _j = 0, _len1 = _ref.length; _j < _len1; j = ++_j) {
       i = _ref[j];
       if (j > 0) {
-        _results.push(this.historyData.history[i] -= 1);
+        _results.push(historyData.history[i] -= 1);
       } else {
         _results.push(void 0);
       }
@@ -51,13 +56,14 @@ History = (function() {
   };
 
   History.prototype.colors = function() {
-    var cssColor, i, wrong, _ref;
+    var cssColor, historyData, i, wrong, _ref;
+    historyData = this.getHistoryData();
     cssColor = {};
-    if (this.historyData.historyLength > 0) {
-      _ref = this.historyData.history;
+    if (historyData.historyLength > 0) {
+      _ref = historyData.history;
       for (i in _ref) {
         wrong = _ref[i];
-        cssColor[i] = "hsla(" + (116 * (1 - (wrong / this.historyData.historyLength))) + ", 100%, 45%, .4)";
+        cssColor[i] = "hsla(" + (116 * (1 - (wrong / historyData.historyLength))) + ", 100%, 45%, .4)";
       }
     }
     return cssColor;
