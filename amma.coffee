@@ -117,7 +117,7 @@ $location, storage, hotkeys, history) ->
   $scope.home = ->
     $location.path "/"
 
-  if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > 1408729273829
+  if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > 1416095403068
     $scope.listToLearn = storage[id].listToLearn
     $scope.listOfMeaning = storage[id].listOfMeaning
     $scope.title = storage[id].title
@@ -250,7 +250,7 @@ app.controller "LearnCtrl", ["$scope", "$localStorage", "$routeParams", "$http",
       $scope.$apply()
 
 
-  if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > 1408729273829
+  if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > 1416095403068
     $scope.listToLearn = storage[id].listToLearn
     $scope.listOfMeaning = storage[id].listOfMeaning
     $scope.title = storage[id].title
