@@ -9,7 +9,6 @@ History = (function() {
     this.historyExpiration = historyExpiration;
     id = this.state.itemId;
     this.getHistoryData = function() {
-      console.log("loading history data for", this.state.itemId);
       return this.storage[this.state.itemId].historyData;
     };
     this.clear = function() {

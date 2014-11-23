@@ -2,7 +2,6 @@ class History
   constructor: (@storage, @state, @historyExpiration) ->
     id = @state.itemId
     @getHistoryData = ->
-        console.log "loading history data for", @state.itemId
         @storage[@state.itemId].historyData
     @clear = ->
       storage.historyReset = (new Date).getTime()
