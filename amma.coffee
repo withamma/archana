@@ -9,6 +9,7 @@ app.controller "ItemListerCtrl", ["$scope", "$http", ($scope, $http) ->
 ]
 
 app.constant "historyExpiration", 1409511179962
+app.constant "storageExpiration", 1416095403068
 app.service "HistoryService", ["$localStorage", "$stateParams", "historyExpiration", History]
 
 app.controller "TestCtrl", ["$scope", '$stateParams', '$http', "$location",
@@ -84,7 +85,7 @@ $location, storage, hotkeys, history) ->
   $scope.home = ->
     $location.path "/"
 
-  if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > 1416095403068
+  if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > storageExpiration
     $scope.listToLearn = storage[id].listToLearn
     $scope.listOfMeaning = storage[id].listOfMeaning
     $scope.title = storage[id].title
@@ -214,7 +215,7 @@ app.controller "LearnCtrl", ["$scope", "$localStorage", "$stateParams", "$http",
       $scope.$apply()
 
 
-  if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > 1416095403068
+  if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > storageExpiration
     $scope.listToLearn = storage[id].listToLearn
     $scope.listOfMeaning = storage[id].listOfMeaning
     $scope.title = storage[id].title

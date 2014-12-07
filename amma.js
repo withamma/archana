@@ -16,6 +16,8 @@ app.controller("ItemListerCtrl", [
 
 app.constant("historyExpiration", 1409511179962);
 
+app.constant("storageExpiration", 1416095403068);
+
 app.service("HistoryService", ["$localStorage", "$stateParams", "historyExpiration", History]);
 
 app.controller("TestCtrl", [
@@ -104,7 +106,7 @@ app.controller("TestCtrl", [
     $scope.home = function() {
       return $location.path("/");
     };
-    if ((storage[id].listToLearn != null) && (storage.lastUpdate != null) && storage.lastUpdate > 1416095403068) {
+    if ((storage[id].listToLearn != null) && (storage.lastUpdate != null) && storage.lastUpdate > storageExpiration) {
       $scope.listToLearn = storage[id].listToLearn;
       $scope.listOfMeaning = storage[id].listOfMeaning;
       $scope.title = storage[id].title;
@@ -265,7 +267,7 @@ app.controller("LearnCtrl", [
         return $scope.$apply();
       }
     };
-    if ((storage[id].listToLearn != null) && (storage.lastUpdate != null) && storage.lastUpdate > 1416095403068) {
+    if ((storage[id].listToLearn != null) && (storage.lastUpdate != null) && storage.lastUpdate > storageExpiration) {
       $scope.listToLearn = storage[id].listToLearn;
       $scope.listOfMeaning = storage[id].listOfMeaning;
       $scope.title = storage[id].title;
