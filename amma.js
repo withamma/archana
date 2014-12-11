@@ -360,5 +360,3 @@ app.controller("ResultsCtrl", [
     };
   }
 ]);
-
-//# sourceMappingURL=amma.js.map

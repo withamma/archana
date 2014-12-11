@@ -71,5 +71,3 @@ History = (function() {
   return History;
 
 })();
-
-//# sourceMappingURL=history.js.map

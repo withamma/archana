@@ -29,5 +29,3 @@ app.config([
     });
   }
 ]);
-
-//# sourceMappingURL=app.js.map
