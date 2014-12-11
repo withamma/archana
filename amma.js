@@ -21,7 +21,7 @@ app.constant("storageExpiration", 1416095403068);
 app.service("HistoryService", ["$localStorage", "$stateParams", "historyExpiration", History]);
 
 app.controller("TestCtrl", [
-  "$scope", '$stateParams', '$http', "$location", '$localStorage', 'hotkeys', 'HistoryService', function($scope, $stateParams, $http, $location, storage, hotkeys, history) {
+  "$scope", '$stateParams', '$http', "$location", '$localStorage', 'hotkeys', 'HistoryService', 'storageExpiration', function($scope, $stateParams, $http, $location, storage, hotkeys, history, storageExpiration) {
     var bindHotkeys, colors, defaults, id, incorrect, k, nextInLink, nextState, previousInLink, v;
     id = "" + $stateParams.itemId;
     $scope.state = "loading";
@@ -239,7 +239,7 @@ app.controller("HowtoCtrl", [
 ]);
 
 app.controller("LearnCtrl", [
-  "$scope", "$localStorage", "$stateParams", "$http", "hotkeys", "HistoryService", "mobile", "$location", function($scope, storage, $stateParams, $http, hotkeys, history, mobile, $location) {
+  "$scope", "$localStorage", "$stateParams", "$http", "hotkeys", "HistoryService", "mobile", "$location", "storageExpiration", function($scope, storage, $stateParams, $http, hotkeys, history, mobile, $location, storageExpiration) {
     var colors, createHistory, id;
     $scope.mobile = mobile;
     $scope.currentPosition = 0;

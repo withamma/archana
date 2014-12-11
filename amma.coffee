@@ -13,8 +13,8 @@ app.constant "storageExpiration", 1416095403068
 app.service "HistoryService", ["$localStorage", "$stateParams", "historyExpiration", History]
 
 app.controller "TestCtrl", ["$scope", '$stateParams', '$http', "$location",
-'$localStorage', 'hotkeys', 'HistoryService', ($scope, $stateParams, $http,
-$location, storage, hotkeys, history) ->
+'$localStorage', 'hotkeys', 'HistoryService', 'storageExpiration', ($scope, $stateParams, $http,
+$location, storage, hotkeys, history, storageExpiration) ->
   id = "#{$stateParams.itemId}"
   $scope.state = "loading"
   $scope.hint = false
@@ -191,7 +191,7 @@ app.controller "HowtoCtrl", ["$scope", '$stateParams', ($scope, $stateParams) ->
 ]
 
 app.controller "LearnCtrl", ["$scope", "$localStorage", "$stateParams", "$http",
-"hotkeys", "HistoryService", "mobile", "$location", ($scope, storage, $stateParams, $http, hotkeys, history, mobile, $location)->
+"hotkeys", "HistoryService", "mobile", "$location", "storageExpiration", ($scope, storage, $stateParams, $http, hotkeys, history, mobile, $location, storageExpiration)->
   $scope.mobile = mobile
   $scope.currentPosition = 0
   $scope.state = "show"
