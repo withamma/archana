@@ -27,6 +27,5 @@
   },
   "_source": "git://github.com/gsklee/ngStorage.git",
   "_target": "~0.3.0",
-  "_originalSource": "ngstorage",
-  "_direct": true
+  "_originalSource": "ngstorage"
 }

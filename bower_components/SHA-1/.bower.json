@@ -1,5 +1,6 @@
 {
   "name": "SHA-1",
+  "version": "0.1.1",
   "homepage": "https://github.com/linkgod/SHA-1",
   "authors": [
     "linkgod <linkgod@qq.com>"
@@ -20,11 +21,11 @@
     "test",
     "tests"
   ],
-  "_release": "2151275d92",
+  "_release": "0.1.1",
   "_resolution": {
-    "type": "branch",
-    "branch": "master",
-    "commit": "2151275d929e82b5b733a3e1c751491aa28c3484"
+    "type": "version",
+    "tag": "0.1.1",
+    "commit": "b75edd9ce1618edf38a5b3040e747e67d3247837"
   },
   "_source": "git://github.com/linkgod/SHA-1.git",
   "_target": "*",

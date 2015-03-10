@@ -1,0 +1,31 @@
+appcache:
+	figure out why it's not the fullpath for gulp manifest
+
+htaccess:
+	images are cached forever
+	learn/*.json cached up to 1 week
+
+
+
+color history with undo:
+	store boolean correct - true/false for history for whole list
+
+ui.bootstrap?
+
+different languages
+
+use older version of angular?
+
+add swipe right (redo) up til last position:
+
+Use default font
+
+simplify css and html
+	nested containers necessary?
+	dynamic css
+
+
+<div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
+<div class="fb-post" data-href="https://www.facebook.com/MataAmritanandamayi/photos/a.10152018577863302.1073741827.85184063301/10152321837078302/?type=1" data-width="466"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/MataAmritanandamayi/photos/a.10152018577863302.1073741827.85184063301/10152321837078302/?type=1">Post</a> by <a href="https://www.facebook.com/MataAmritanandamayi">Amma</a>.</div></div>
+
+reset history
