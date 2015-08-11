@@ -8,11 +8,9 @@ app.controller "ItemListerCtrl", ["$scope", "$http", ($scope, $http) ->
     $scope.items = data
 ]
 
-app.constant "historyExpiration", 1409511179962
 app.constant "storageExpiration", 1416095403068
-app.service "HistoryService", ["$localStorage", "$stateParams", "historyExpiration", History]
 
-app.controller "TestCtrl", ["$scope", '$stateParams', "$location", '$localStorage', 'hotkeys', 'HistoryService', 'storageExpiration', "verses", ($scope, $stateParams, $location, storage, hotkeys, history, storageExpiration, verses) ->
+app.controller "TestCtrl", ["$scope", '$stateParams', "$location", '$localStorage', 'hotkeys', 'History', 'storageExpiration', "verses", ($scope, $stateParams, $location, storage, hotkeys, history, storageExpiration, verses) ->
   id = "#{$stateParams.itemId}"
   $scope.state = "loading"
   $scope.hint = false
@@ -70,8 +68,12 @@ app.controller "TestCtrl", ["$scope", '$stateParams', "$location", '$localStorag
     "currentPosition": 0
     "displayMeaning": false
     "incorrect": []
+    "listToLearn": verses.data.listToLearn
+    "listOfMeaning": verses.data.listOfMeaning
+  storage[id] = {} if not storage[id]?
   for k,v of defaults
     storage[id][k] = v if not storage[id][k]?
+  console.log storage[id]
 
   incorrect = storage[id]["incorrect"]
   $scope.currentPosition = if storage[id]["currentPosition"]? then storage[id]["currentPosition"] else 0
@@ -93,7 +95,8 @@ app.controller "TestCtrl", ["$scope", '$stateParams', "$location", '$localStorag
 
   $scope.getColor = ->
     {
-      "background-color": if $scope.state is "show" then colors[$scope.currentPosition]    }
+      "background-color": if $scope.state is "show" then colors[$scope.currentPosition]
+    }
 
 
   $scope.showAnswer = () ->
@@ -176,72 +179,134 @@ app.controller "HowtoCtrl", ["$scope", '$stateParams', ($scope, $stateParams) ->
   $scope.itemId = $stateParams.itemId
 ]
 
-app.controller "LearnCtrl", ["$scope", "$localStorage", "$stateParams", "$http",
-"hotkeys", "HistoryService", "mobile", "$location", "storageExpiration", ($scope, storage, $stateParams, $http, hotkeys, history, mobile, $location, storageExpiration)->
+# app.controller "LearnCtrl", ["$scope", "$localStorage", "$stateParams", "$http",
+# "hotkeys", "History", "mobile", "$location", "storageExpiration", "VerseHandler"
+# ($scope, storage, $stateParams, $http, hotkeys, history, mobile, $location, storageExpiration, VerseHandler)->
+#   debugger
+#   $scope.bg = "img/feet.jpg"
+#   $scope.mobile = mobile
+#   $scope.currentPosition = 0
+#   $scope.state = "show"
+#   $scope.displayMeaning = false
+#   createHistory = ->
+#     colors = history.colors()
+#   colors = {}
+#   id = "#{$stateParams.itemId}"
+#   if not storage[id]?
+#     storage[id] = {}
+#     storage[id]["currentPosition"] = 0
+#     storage[id]["displayMeaning"] = false
+#   $scope.home = ->
+#     $location.path "/"
+
+#   $scope.jumpTo = (location) ->
+#     location= parseInt(location)
+#     if location? and location < Object.keys($scope.listToLearn).length and location > 0
+#       $scope.currentPosition = location - 1
+#       $scope.isCollapsed=true
+#       $scope.$apply()
+
+
+#   if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > storageExpiration
+#     $scope.listToLearn = storage[id].listToLearn
+#     $scope.listOfMeaning = storage[id].listOfMeaning
+#     $scope.title = storage[id].title
+#     $scope.state = "show"
+#     colors = history.colors()
+#   else
+#     $http.get("learn/#{$stateParams.itemId}.json").success (data) ->
+#       $scope.listToLearn = data.listToLearn
+#       $scope.listOfMeaning = data.listOfMeaning
+#       $scope.title = data.title
+#       $scope.state = "show"
+#       colors = history.colors()
+
+#   $scope.getColor = ->
+#     {
+#       "background-color": if $scope.state is "show" then colors[$scope.currentPosition] else "#eee"
+#     }
+
+#   $scope.toggleMeaning = () ->
+#     $scope.displayMeaning = !$scope.displayMeaning
+
+#   $scope.verse = -> 
+#     $scope.listToLearn[$scope.currentPosition]
+#   $scope.meaning = -> 
+#     $scope.listOfMeaning[$scope.currentPosition]
+
+#   $scope.next = ($event)->
+#     $event.stopPropagation()
+#     $scope.currentPosition += 1
+#     false
+
+#   $scope.prev = ($event)->
+#     $event.stopPropagation()
+#     $scope.currentPosition -= 1
+#     false
+
+#   hotkeys.bindTo($scope)
+#     .add({
+#       combo: 'space'
+#       description: 'Next'
+#       callback: () -> $scope.next()
+#     })
+# ]
+
+app.controller "LearnCtrl", ($scope, VerseHandler, VerseLocalStorage, mobile, hotkeys, History)->
+  $scope.bg = "img/feet.jpg"
   $scope.mobile = mobile
-  $scope.currentPosition = 0
-  $scope.state = "show"
   $scope.displayMeaning = false
-  createHistory = ->
-    colors = history.colors()
-  colors = {}
-  id = "#{$stateParams.itemId}"
-  if not storage[id]?
-    storage[id] = {}
-    storage[id]["currentPosition"] = 0
-    storage[id]["displayMeaning"] = false
+  $scope.state = "show"
+
+  storage = VerseLocalStorage.getState()
+  VerseHandler.reload()
+
+  colors = History.colors()
+
   $scope.home = ->
     $location.path "/"
 
   $scope.jumpTo = (location) ->
     location= parseInt(location)
-    if location? and location < Object.keys($scope.listToLearn).length and location > 0
-      $scope.currentPosition = location - 1
-      $scope.isCollapsed=true
-      $scope.$apply()
-
-
-  if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > storageExpiration
-    $scope.listToLearn = storage[id].listToLearn
-    $scope.listOfMeaning = storage[id].listOfMeaning
-    $scope.title = storage[id].title
-    $scope.state = "show"
-    colors = history.colors()
-  else
-    $http.get("learn/#{$stateParams.itemId}.json").success (data) ->
-      $scope.listToLearn = data.listToLearn
-      $scope.listOfMeaning = data.listOfMeaning
-      $scope.title = data.title
-      $scope.state = "show"
-      colors = history.colors()
+    VerseHandler.setPosition(location)
+    $scope.isCollapsed=true
 
   $scope.getColor = ->
     {
-      "background-color": if $scope.state is "show" then colors[$scope.currentPosition] else "#eee"
+      "background-color": if $scope.state is "show" then colors[VerseHandler.currentPosition] else "#eee"
     }
 
   $scope.toggleMeaning = () ->
     $scope.displayMeaning = !$scope.displayMeaning
 
   $scope.verse = -> 
-    $scope.listToLearn[$scope.currentPosition]
+    VerseHandler.getVerse()
   $scope.meaning = -> 
-    $scope.listOfMeaning[$scope.currentPosition]
-  $scope.next = ->
-    $scope.currentPosition += 1
-  $scope.prev = ->
-    $scope.currentPosition -= 1
+    VerseHandler.getMeaning()
+
+  $scope.next = ($event)->
+    $event.stopPropagation()
+    VerseHandler.next()
+    false
+
+  $scope.prev = ($event)->
+    $event.stopPropagation()
+    VerseHandler.prev()
+    false
+
+  $scope.getAudioSegmentSrc = ()->
+    console.log "ASfd", VerseHandler.getAudioSegmentSrc()
+    VerseHandler.getAudioSegmentSrc()
+
   hotkeys.bindTo($scope)
     .add({
       combo: 'space'
       description: 'Next'
       callback: () -> $scope.next()
     })
-]
-
 
 app.controller "ResultsCtrl", ["$scope", "$localStorage", '$stateParams',
-'$http','dateFilter',"$window", "HistoryService", ($scope, storage, $stateParams, $http,
+'$http','dateFilter',"$window", "History", ($scope, storage, $stateParams, $http,
 dateFilter, $window, history) ->
   $scope.id = $stateParams.itemId
   state = storage[$scope.id]

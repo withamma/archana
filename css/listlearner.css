@@ -1,3 +1,12 @@
+html {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  word-wrap: break-word;
+}
+
 .wrapper {
     width: 95%;
     margin: 3em auto;
@@ -101,12 +110,12 @@
   transition: opacity 2s ease-in-out;
 }
 
-
+/*
 .title{
   color: white;
   margin: 0 0 50px 0;
 }
-
+*/
 .fixed-footer{
   position: fixed;
   margin: 0;
@@ -130,6 +139,35 @@
   height: 70%;
   margin: auto;
 }
+
+/*
+.qa-inner-container.ng-enter {
+  -webkit-animation: enter_sequence 1s linear; 
+  animation: enter_sequence 1s linear; 
+}
+@-webkit-keyframes enter_sequence {
+  from { opacity:0; }
+  to { opacity:1; }
+}
+@keyframes enter_sequence {
+  from { opacity:0; }
+  to { opacity:1; }
+}
+
+.qa-inner-container.ng-leave {
+  -webkit-animation: leave_sequence 1s linear; 
+  animation: leave_sequence 1s linear; 
+}
+@-webkit-keyframes leave_sequence {
+  from { opacity:1; }
+  to { opacity:0; }
+}
+@keyframes leave_sequence {
+  from { opacity:1; }
+  to { opacity:0; }
+}*/
+
+
 .question{
   border-bottom: 1px solid #eee;
 }
@@ -161,4 +199,74 @@
   margin-top: 50px;
   color: #eee;
   font-size: 2em;
+}
+
+
+
+.slide-and-fade-up.ng-enter {
+  opacity: 0;
+  -moz-transform: translateY(100%);
+  -ms-transform: translateY(100%);
+  -webkit-transform: translateY(100%);
+  transform: translateY(100%);
+  -moz-transition: -moz-transform .25s, opacity .25s;
+  -o-transition: -o-transform .25s, opacity .25s;
+  -webkit-transition: -webkit-transform .25s, opacity .25s;
+  transition: transform .25s, opacity .25s;
+}
+.slide-and-fade-up.ng-enter.ng-enter-active {
+  opacity: 1;
+  -moz-transform: translateY(0);
+  -ms-transform: translateY(0);
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+}
+.slide-and-fade-up.ng-leave {
+  opacity: 1;
+  -moz-transform: translateY(0);
+  -ms-transform: translateY(0);
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+  -moz-transition: -moz-transform .25s, opacity .25s;
+  -o-transition: -o-transform .25s, opacity .25s;
+  -webkit-transition: -webkit-transform .25s, opacity .25s;
+  transition: transform .25s, opacity .25s;
+}
+.slide-and-fade-up.ng-leave.ng-leave-active {
+  opacity: 0;
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  -webkit-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+
+
+html, body {
+  height: 100%;
+}
+
+body {
+  padding: 50px 0 0 0;
+}
+
+.navbar-toggle {
+  float: left;
+  margin-left: 15px;
+}
+
+@media (min-width: 0) {
+  .navbar-toggle {
+    display: block; /* force showing the toggle */
+  }
+}
+
+@media (min-width: 992px) {
+  body {
+    padding: 0;
+  }
+  .navbar {
+    right: auto;
+    background: none;
+    border: none;
+  }
 }

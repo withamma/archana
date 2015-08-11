@@ -5,7 +5,7 @@ gulp = require("gulp")
 uglify = require('gulp-uglify')
 useref = require("gulp-useref")
 manifest = require("gulp-manifest")
-coffeelint = require("gulp-coffeelint")
+# coffeelint = require("gulp-coffeelint")
 coffee = require('gulp-coffee')
 imagemin = require('gulp-imagemin')
 jsonminify = require('gulp-jsonminify')
@@ -17,7 +17,7 @@ prefix = require('gulp-autoprefixer')
 rename = require 'gulp-rename'
 browserSync = require('browser-sync')
 gutil = require('gulp-util')
-spawn = require('child_process').spawn
+# spawn = require('child_process').spawn
 
 reload = browserSync.reload
 assets = useref.assets()
@@ -35,10 +35,10 @@ if gutil.env._[0] is "prod"
 
 gulp.task "default", ["build"]
 
-gulp.task "build", ["manifest", "minifyCSS", "minifyJS"]
+gulp.task "build", ["coffee", "manifest", "minifyCSS", "minifyJS", "audio"]
 
-gulp.task "stage", ["manifest", "minifyCSS", "minifyJS"], ->
-  gulp.src(["composer.json", ".htaccess"])
+gulp.task "stage", ["coffee", "manifest", "minifyCSS", "minifyJS", "audio"], ->
+  gulp.src(["composer.json", ".htaccess", "favicon.ico"])
     .pipe(gulp.dest(baseDest))
   gulp.src(["heroku-gitignore"])
     .pipe(rename(".gitignore"))
@@ -59,7 +59,7 @@ gulp.task "minifyJS", ["html"], ->
   gulp.src(["#{baseDest}lib.js"])
     .pipe(gulpif(isProd, uglify()))
     .pipe(gulp.dest(baseDest))
-
+# very bad idea to cache audio here as code changes frequently and busts cache, use indexed db
 gulp.task "manifest", ["html", "images", "json", "templates"], ->
   gulp.src([
     "#{baseDest}**/*"
@@ -79,13 +79,17 @@ gulp.task "manifest", ["html", "images", "json", "templates"], ->
         "composer.json"
         "bower.json"
     ]
+    cache: [
+      "http://fonts.googleapis.com/css?family=Source+Code+Pro&subset=latin,latin-ext"
+      "http://fonts.gstatic.com/s/sourcecodepro/v6/mrl8jkM18OlOQN8JLgasDy2Q8seG17bfDXYR_jUsrzg.woff2"
+      "http://fonts.gstatic.com/s/sourcecodepro/v6/mrl8jkM18OlOQN8JLgasD9V_2ngZ8dMf8fLgjYEouxg.woff2"
+    ]
   )).pipe gulp.dest("./dist")
 
 gulp.task "coffee", ->
   gulp.src("./js/*.coffee")
-    .pipe(coffee())
-    .pipe(coffeelint())
-    .pipe coffeelint.reporter()
+    .pipe(coffee({bare: true}).on('error', gutil.log))
+    .pipe(gulp.dest('.js'))
 
 gulp.task "html", ->
   gulp.src("index.html")
@@ -109,3 +113,7 @@ gulp.task "json", ->
 gulp.task "templates", ->
   gulp.src("templates/*.*")
     .pipe(gulp.dest("dist/templates"))
+
+gulp.task "audio", ->
+  gulp.src("audio/*.*")
+    .pipe(gulp.dest("dist/audio"))

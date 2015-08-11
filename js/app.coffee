@@ -4,7 +4,7 @@ app = angular.module("linear-learning", [
   'ngStorage'
   'ngTouch'
   'cfp.hotkeys'
-  'ngAnimate'
+  # 'ngAnimate'
   'ngSanitize'
   'angulartics'
   'angulartics.google.analytics'
