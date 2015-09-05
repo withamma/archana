@@ -256,8 +256,11 @@ app.controller "LearnCtrl", ($scope, VerseHandler, VerseLocalStorage, mobile, ho
   $scope.bg = "img/feet.jpg"
   $scope.mobile = mobile
   $scope.displayMeaning = false
+  $scope.left = false
   $scope.state = "show"
-
+  $scope.toggleRightyMode = ->
+    $scope.left = !$scope.left
+    
   storage = VerseLocalStorage.getState()
   VerseHandler.reload()
 
@@ -279,6 +282,8 @@ app.controller "LearnCtrl", ($scope, VerseHandler, VerseLocalStorage, mobile, ho
   $scope.toggleMeaning = () ->
     $scope.displayMeaning = !$scope.displayMeaning
 
+  $scope.title = ->
+    VerseHandler.getTitle()
   $scope.verse = -> 
     VerseHandler.getVerse()
   $scope.meaning = -> 
@@ -295,7 +300,6 @@ app.controller "LearnCtrl", ($scope, VerseHandler, VerseLocalStorage, mobile, ho
     false
 
   $scope.getAudioSegmentSrc = ()->
-    console.log "ASfd", VerseHandler.getAudioSegmentSrc()
     VerseHandler.getAudioSegmentSrc()
 
   hotkeys.bindTo($scope)

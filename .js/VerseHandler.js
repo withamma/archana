@@ -25,6 +25,9 @@ app.factory("VerseHandler", function(LocalVerseData, VerseLocalStorage) {
           return false;
         }
       };
+      this.getTitle = function() {
+        return this.title;
+      };
       this.hasPrev = function() {
         if (this.state.currentPosition > -1) {
           return true;

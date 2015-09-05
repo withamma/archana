@@ -172,19 +172,18 @@ html {
   border-bottom: 1px solid #eee;
 }
 .question,.answer{
-  font-family: Source Code Pro, monospace;
+  /*font-family: Source Code Pro, monospace;*/
+  font-family: Raleway;
   color: #fff;
-  font-weight: 500;
+  font-weight: 900;
+  text-shadow: 0px 0px 3px #000, -3px -3px 3px #000, 1px 1px #000;
   padding-bottom: 20px;
   font-size: 2em;
   line-height: 2.1em;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, .5);
 }
 .answer h3,h4{
   font-size: 29px;
-  background-color: rgba(0,0,0,.5);
   border-radius: 25px;
-  margin-top: 80px;
   padding: 9px;
 }
 .answer {

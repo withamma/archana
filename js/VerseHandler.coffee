@@ -15,6 +15,9 @@ app.factory "VerseHandler", (LocalVerseData, VerseLocalStorage) ->
       @hasNext = ->
         if @state.currentPosition + 2 <= @length then true else false
 
+      @getTitle = ->
+        @title
+        
       @hasPrev = ->
         if @state.currentPosition > -1 then true else false
 

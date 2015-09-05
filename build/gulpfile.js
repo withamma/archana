@@ -48,9 +48,9 @@ if (gutil.env._[0] === "prod") {
 
 gulp.task("default", ["build"]);
 
-gulp.task("build", ["coffee", "manifest", "minifyCSS", "minifyJS"]);
+gulp.task("build", ["coffee", "manifest", "minifyCSS", "minifyJS", "audio"]);
 
-gulp.task("stage", ["coffee", "manifest", "minifyCSS", "minifyJS"], function() {
+gulp.task("stage", ["coffee", "manifest", "minifyCSS", "minifyJS", "audio"], function() {
   gulp.src(["composer.json", ".htaccess", "favicon.ico"]).pipe(gulp.dest(baseDest));
   return gulp.src(["heroku-gitignore"]).pipe(rename(".gitignore")).pipe(changed(baseDest)).pipe(gulp.dest(baseDest));
 });
@@ -103,4 +103,8 @@ gulp.task("json", function() {
 
 gulp.task("templates", function() {
   return gulp.src("templates/*.*").pipe(gulp.dest("dist/templates"));
+});
+
+gulp.task("audio", function() {
+  return gulp.src("audio/*.*").pipe(gulp.dest("dist/audio"));
 });

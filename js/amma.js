@@ -231,7 +231,11 @@ app.controller("LearnCtrl", function($scope, VerseHandler, VerseLocalStorage, mo
   $scope.bg = "img/feet.jpg";
   $scope.mobile = mobile;
   $scope.displayMeaning = false;
+  $scope.left = false;
   $scope.state = "show";
+  $scope.toggleRightyMode = function() {
+    return $scope.left = !$scope.left;
+  };
   storage = VerseLocalStorage.getState();
   VerseHandler.reload();
   colors = History.colors();
@@ -251,6 +255,9 @@ app.controller("LearnCtrl", function($scope, VerseHandler, VerseLocalStorage, mo
   $scope.toggleMeaning = function() {
     return $scope.displayMeaning = !$scope.displayMeaning;
   };
+  $scope.title = function() {
+    return VerseHandler.getTitle();
+  };
   $scope.verse = function() {
     return VerseHandler.getVerse();
   };
@@ -268,7 +275,6 @@ app.controller("LearnCtrl", function($scope, VerseHandler, VerseLocalStorage, mo
     return false;
   };
   $scope.getAudioSegmentSrc = function() {
-    console.log("ASfd", VerseHandler.getAudioSegmentSrc());
     return VerseHandler.getAudioSegmentSrc();
   };
   return hotkeys.bindTo($scope).add({

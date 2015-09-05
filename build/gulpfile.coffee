@@ -35,9 +35,10 @@ if gutil.env._[0] is "prod"
 
 gulp.task "default", ["build"]
 
-gulp.task "build", ["coffee", "manifest", "minifyCSS", "minifyJS", "audio"]
+gulp.task "build", ["coffee", "manifest", "minifyCSS", "minifyJS"]
 
-gulp.task "stage", ["coffee", "manifest", "minifyCSS", "minifyJS", "audio"], ->
+# You only need to do this once
+gulp.task "stage", ->
   gulp.src(["composer.json", ".htaccess", "favicon.ico"])
     .pipe(gulp.dest(baseDest))
   gulp.src(["heroku-gitignore"])
@@ -79,11 +80,11 @@ gulp.task "manifest", ["html", "images", "json", "templates"], ->
         "composer.json"
         "bower.json"
     ]
-    cache: [
-      "http://fonts.googleapis.com/css?family=Source+Code+Pro&subset=latin,latin-ext"
-      "http://fonts.gstatic.com/s/sourcecodepro/v6/mrl8jkM18OlOQN8JLgasDy2Q8seG17bfDXYR_jUsrzg.woff2"
-      "http://fonts.gstatic.com/s/sourcecodepro/v6/mrl8jkM18OlOQN8JLgasD9V_2ngZ8dMf8fLgjYEouxg.woff2"
-    ]
+    # cache: [
+    #   "http://fonts.googleapis.com/css?family=Source+Code+Pro&subset=latin,latin-ext"
+    #   "http://fonts.gstatic.com/s/sourcecodepro/v6/mrl8jkM18OlOQN8JLgasDy2Q8seG17bfDXYR_jUsrzg.woff2"
+    #   "http://fonts.gstatic.com/s/sourcecodepro/v6/mrl8jkM18OlOQN8JLgasD9V_2ngZ8dMf8fLgjYEouxg.woff2"
+    # ]
   )).pipe gulp.dest("./dist")
 
 gulp.task "coffee", ->
