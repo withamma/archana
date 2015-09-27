@@ -1,24 +1,23 @@
+<!-- yo -->
 <div class="container-fluid">
-<div class="row">
+  <div class="fluid-row">
     <h1 class="text-center">Archana by Heart!</h1>
-</div>
-<div class="row">
+  </div>
+  <div class="fluid-row">
     <div class="col-md-10">
-        <div class="masonry">
-            <div class="thumbnail item" ng-repeat="item in items">
-              <a ng-href="{{'#/howto/' + item.id}}" class="thumb"><img ng-src="{{item.image}}"></a>
-              <a ng-href="{{'#/howto/' + item.id}}">{{item.title}}</a>
-              <p>{{item.description}}</p>
-            </div> 
-        </div>
+      <div class="masonry">
+        <div class="thumbnail item" ng-repeat="item in items">
+          <a ng-href="{{'#/howto/' + item.id}}" class="thumb"><img ng-src="{{item.image}}"></a>
+          <a ng-href="{{'#/howto/' + item.id}}">{{item.title}}</a>
+          <p>{{item.description}}</p>
+        </div> 
+      </div>
     </div>
 
     <div class="col-md-2">
       <h2>Coming soon</h2>
       <ol>
         <li>Different languages of Archana</li>
-        <li>Shlokas</li>
-        <li>Audio pronounciation (May need an app)</li>
         <li>Auto show based on time it takes to say name</li>
         <li>FAQ page with videos showing how to use</li>
         <li>Feedback page (for now email hisingh1@gmail.com)</li>
@@ -27,6 +26,6 @@
         <li>Tests (Currently 100% legacy code)</li>
       </ol>
     </div>
-</div>
+  </div>
 </div>
 

@@ -1,5 +1,5 @@
 <div full-cover-image="img/feet.jpg" ng-hide="state === 'end'"
-  ng-swipe-left="next($event);" ng-swipe-right="prev($event);" ng-click="next($event);"></div>
+  ng-swipe-left="next($event);" ng-swipe-right="prev($event);" ng-click="console.log('sup')"></div>
 <!-- <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -16,7 +16,7 @@
                 <li>
                 <a ng-click="home()">{{title}}</a>
                 </li>
-                
+
                 <li ng-if="!mobile">
                     <a ng-click="left=!left">Toggle Righty mode</a>
                 </li>
@@ -45,9 +45,20 @@
         <li>
           <a ng-click="toggleMeaning()">Toggle Meaning</a>
         </li>
-      
+        <li>
+          <a ng-click="toggleAutoPlay()">Autoplay Audio</a>
+        </li>
+        <li>
+          <div class="checkbox checkbox-slider--c-weight checkbox-slider-lg">
+            <label>
+              <input type="checkbox" checked=""><span>checked</span>
+            </label>
+          </div>
+
+        </li>
+
       </ul>
-      
+
     </div>
 
     <div class="navbar navbar-default navbar-fixed-top" >
@@ -58,34 +69,41 @@
       </button>
     </div>
 
-<div ng-swipe-left="next($event);" ng-swipe-right="prev($event);" ng-click="next($event);" >
-  <div class="row clearfix">
+<div ng-swipe-left="next($event);" ng-swipe-right="prev($event);" ng-click="next($event);" class="fluid-row clearfix" >
+  <div class="col-xs-12">
     <div class="text-center answer" >
-      <!-- animate-on-change="verse()" -->
       <h3 ng-style="getColor()" ng-bind-html="verse()" ></h3>
       <h4 ng-if="displayMeaning === true" ng-bind-html="meaning()"></h4>
     </div>
   </div>
 </div>
-<audio id="verseAudio" ng-src="{{getAudioSegmentSrc()}}" preload="auto" autoplay="autoplay"></audio>
-
+<audio id="verseAudio" ng-src="{{getAudioSegmentSrc()}}" preload="auto" {{autoplay}}></audio>
 <!-- Answer Buttons -->
+<div class="fluid-row clearfix above-fixed-footer" >
+  <div class="col-xs-6" ng-if="state === 'show'">
+    <button type="button" class="btn btn-lg btn-outline" ng-click="playAudio()">Play</button>
+  </div>
 
-<div class="row clearfix fixed-footer" ng-if="!mobile">
-  <div ng-if="!left">
-    <div class="col-xs-6" ng-if="state === 'show'">
-        <button type="button" class="btn btn-lg btn-outline" ng-click="next($event);">Next</button>
+</div>
+
+<div class="fluid-row clearfix fixed-footer" >
+  <div ng-if="!mobile">
+    <div ng-if="!left">
+      <div class="col-xs-6" ng-if="state === 'show'">
+          <button type="button" class="btn btn-lg btn-outline" ng-click="next($event);">Next</button>
+      </div>
+      <div class="col-xs-6" ng-if="state === 'show'">
+          <button type="button" class="btn btn-lg btn-outline" ng-click="prev($event);">Back</button>
+      </div>
     </div>
-    <div class="col-xs-6" ng-if="state === 'show'">
-        <button type="button" class="btn btn-lg btn-outline" ng-click="prev($event);">Back</button>
+    <div ng-if="left">
+      <div class="col-xs-6" ng-if="state === 'show'">
+          <button type="button" class="btn btn-lg btn-outline" ng-click="prev($event);">Back</button>
+      </div>
+      <div class="col-xs-6" ng-if="state === 'show'">
+          <button type="button" class="btn btn-lg btn-outline" ng-click="next($event);">Next</button>
+      </div>
     </div>
   </div>
-  <div ng-if="left">
-    <div class="col-xs-6" ng-if="state === 'show'">
-        <button type="button" class="btn btn-lg btn-outline" ng-click="prev($event);">Back</button>
-    </div>
-    <div class="col-xs-6" ng-if="state === 'show'">
-        <button type="button" class="btn btn-lg btn-outline" ng-click="next($event);">Next</button>
-    </div>
-  </div>
+
 </div>
