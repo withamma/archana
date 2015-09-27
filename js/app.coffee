@@ -8,6 +8,7 @@ app = angular.module("linear-learning", [
   'ngSanitize'
   'angulartics'
   'angulartics.google.analytics'
+  'ui-rangeSlider'
 ])
 
 app.config ["$stateProvider", "$urlRouterProvider", ($stateProvider, $urlRouterProvider) ->

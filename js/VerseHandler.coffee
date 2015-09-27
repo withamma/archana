@@ -2,6 +2,7 @@ app.factory "VerseHandler", (LocalVerseData, VerseLocalStorage) ->
   # localStorage used to store the position 
   new class VerseHandler
     reload: ->
+      LocalVerseData.reload()
       LocalVerseData.verses.then (data) =>
         @verses = data.listToLearn
         @meanings = data.listOfMeaning
@@ -15,8 +16,11 @@ app.factory "VerseHandler", (LocalVerseData, VerseLocalStorage) ->
       @hasNext = ->
         if @state.currentPosition + 2 <= @length then true else false
 
+      @getTitle = ->
+        @title
+        
       @hasPrev = ->
-        if @state.currentPosition > -1 then true else false
+        if @state.currentPosition > 0 then true else false
 
       @next = ->
         @state.currentPosition += 1 if @hasNext()

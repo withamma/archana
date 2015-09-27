@@ -178,90 +178,105 @@ app.controller "TestCtrl", ["$scope", '$stateParams', "$location", '$localStorag
 app.controller "HowtoCtrl", ["$scope", '$stateParams', ($scope, $stateParams) ->
   $scope.itemId = $stateParams.itemId
 ]
+# old
+  # app.controller "LearnCtrl", ["$scope", "$localStorage", "$stateParams", "$http",
+  # "hotkeys", "History", "mobile", "$location", "storageExpiration", "VerseHandler"
+  # ($scope, storage, $stateParams, $http, hotkeys, history, mobile, $location, storageExpiration, VerseHandler)->
+  #   debugger
+  #   $scope.bg = "img/feet.jpg"
+  #   $scope.mobile = mobile
+  #   $scope.currentPosition = 0
+  #   $scope.state = "show"
+  #   $scope.displayMeaning = false
+  #   createHistory = ->
+  #     colors = history.colors()
+  #   colors = {}
+  #   id = "#{$stateParams.itemId}"
+  #   if not storage[id]?
+  #     storage[id] = {}
+  #     storage[id]["currentPosition"] = 0
+  #     storage[id]["displayMeaning"] = false
+  #   $scope.home = ->
+  #     $location.path "/"
 
-# app.controller "LearnCtrl", ["$scope", "$localStorage", "$stateParams", "$http",
-# "hotkeys", "History", "mobile", "$location", "storageExpiration", "VerseHandler"
-# ($scope, storage, $stateParams, $http, hotkeys, history, mobile, $location, storageExpiration, VerseHandler)->
-#   debugger
-#   $scope.bg = "img/feet.jpg"
-#   $scope.mobile = mobile
-#   $scope.currentPosition = 0
-#   $scope.state = "show"
-#   $scope.displayMeaning = false
-#   createHistory = ->
-#     colors = history.colors()
-#   colors = {}
-#   id = "#{$stateParams.itemId}"
-#   if not storage[id]?
-#     storage[id] = {}
-#     storage[id]["currentPosition"] = 0
-#     storage[id]["displayMeaning"] = false
-#   $scope.home = ->
-#     $location.path "/"
-
-#   $scope.jumpTo = (location) ->
-#     location= parseInt(location)
-#     if location? and location < Object.keys($scope.listToLearn).length and location > 0
-#       $scope.currentPosition = location - 1
-#       $scope.isCollapsed=true
-#       $scope.$apply()
+  #   $scope.jumpTo = (location) ->
+  #     location= parseInt(location)
+  #     if location? and location < Object.keys($scope.listToLearn).length and location > 0
+  #       $scope.currentPosition = location - 1
+  #       $scope.isCollapsed=true
+  #       $scope.$apply()
 
 
-#   if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > storageExpiration
-#     $scope.listToLearn = storage[id].listToLearn
-#     $scope.listOfMeaning = storage[id].listOfMeaning
-#     $scope.title = storage[id].title
-#     $scope.state = "show"
-#     colors = history.colors()
-#   else
-#     $http.get("learn/#{$stateParams.itemId}.json").success (data) ->
-#       $scope.listToLearn = data.listToLearn
-#       $scope.listOfMeaning = data.listOfMeaning
-#       $scope.title = data.title
-#       $scope.state = "show"
-#       colors = history.colors()
+  #   if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > storageExpiration
+  #     $scope.listToLearn = storage[id].listToLearn
+  #     $scope.listOfMeaning = storage[id].listOfMeaning
+  #     $scope.title = storage[id].title
+  #     $scope.state = "show"
+  #     colors = history.colors()
+  #   else
+  #     $http.get("learn/#{$stateParams.itemId}.json").success (data) ->
+  #       $scope.listToLearn = data.listToLearn
+  #       $scope.listOfMeaning = data.listOfMeaning
+  #       $scope.title = data.title
+  #       $scope.state = "show"
+  #       colors = history.colors()
 
-#   $scope.getColor = ->
-#     {
-#       "background-color": if $scope.state is "show" then colors[$scope.currentPosition] else "#eee"
-#     }
+  #   $scope.getColor = ->
+  #     {
+  #       "background-color": if $scope.state is "show" then colors[$scope.currentPosition] else "#eee"
+  #     }
 
-#   $scope.toggleMeaning = () ->
-#     $scope.displayMeaning = !$scope.displayMeaning
+  #   $scope.toggleMeaning = () ->
+  #     $scope.displayMeaning = !$scope.displayMeaning
 
-#   $scope.verse = -> 
-#     $scope.listToLearn[$scope.currentPosition]
-#   $scope.meaning = -> 
-#     $scope.listOfMeaning[$scope.currentPosition]
+  #   $scope.verse = -> 
+  #     $scope.listToLearn[$scope.currentPosition]
+  #   $scope.meaning = -> 
+  #     $scope.listOfMeaning[$scope.currentPosition]
 
-#   $scope.next = ($event)->
-#     $event.stopPropagation()
-#     $scope.currentPosition += 1
-#     false
+  #   $scope.next = ($event)->
+  #     $event.stopPropagation()
+  #     $scope.currentPosition += 1
+  #     false
 
-#   $scope.prev = ($event)->
-#     $event.stopPropagation()
-#     $scope.currentPosition -= 1
-#     false
+  #   $scope.prev = ($event)->
+  #     $event.stopPropagation()
+  #     $scope.currentPosition -= 1
+  #     false
 
-#   hotkeys.bindTo($scope)
-#     .add({
-#       combo: 'space'
-#       description: 'Next'
-#       callback: () -> $scope.next()
-#     })
-# ]
+  #   hotkeys.bindTo($scope)
+  #     .add({
+  #       combo: 'space'
+  #       description: 'Next'
+  #       callback: () -> $scope.next()
+  #     })
+  # ]
 
-app.controller "LearnCtrl", ($scope, VerseHandler, VerseLocalStorage, mobile, hotkeys, History)->
+app.controller "LearnCtrl", ($scope, VerseHandler, VerseLocalStorage, mobile, hotkeys, History, $location)->
   $scope.bg = "img/feet.jpg"
   $scope.mobile = mobile
   $scope.displayMeaning = false
+  $scope.left = false
+  $scope.autoplay = ""
   $scope.state = "show"
-
+  $scope.toggleRightyMode = ->
+    $scope.left = !$scope.left
+    
   storage = VerseLocalStorage.getState()
   VerseHandler.reload()
 
   colors = History.colors()
+
+  toggle = (item, state1, state2) ->
+    item = if item isnt state1 then state1 else state2
+
+  $scope.toggleAutoPlay = ->
+    toggle($scope.autoplay,"autoplay","")
+
+  $scope.playAudio = ->
+    x = $("audio")[0]
+    x.load() # this is so it plays from the right spot
+    x.play()
 
   $scope.home = ->
     $location.path "/"
@@ -279,6 +294,8 @@ app.controller "LearnCtrl", ($scope, VerseHandler, VerseLocalStorage, mobile, ho
   $scope.toggleMeaning = () ->
     $scope.displayMeaning = !$scope.displayMeaning
 
+  $scope.title = ->
+    VerseHandler.getTitle()
   $scope.verse = -> 
     VerseHandler.getVerse()
   $scope.meaning = -> 
@@ -295,7 +312,6 @@ app.controller "LearnCtrl", ($scope, VerseHandler, VerseLocalStorage, mobile, ho
     false
 
   $scope.getAudioSegmentSrc = ()->
-    console.log "ASfd", VerseHandler.getAudioSegmentSrc()
     VerseHandler.getAudioSegmentSrc()
 
   hotkeys.bindTo($scope)
