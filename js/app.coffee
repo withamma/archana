@@ -8,7 +8,7 @@ app = angular.module("linear-learning", [
   'ngSanitize'
   'angulartics'
   'angulartics.google.analytics'
-  'ui-rangeSlider'
+  'rzModule'
 ])
 
 app.config ["$stateProvider", "$urlRouterProvider", ($stateProvider, $urlRouterProvider) ->
@@ -21,17 +21,17 @@ app.config ["$stateProvider", "$urlRouterProvider", ($stateProvider, $urlRouterP
     url: "/test/:itemId",
     controller: "TestCtrl"
     templateUrl: "templates/test.template.html"
-    resolve: 
+    resolve:
       # this should be anotated - minifying will be a disaster
-      verses: ($http, $stateParams) -> 
-        $http.get("learn/#{$stateParams.itemId}.json")   
+      verses: ($http, $stateParams) ->
+        $http.get("learn/#{$stateParams.itemId}.json")
   ).state("learn",
     url: "/learn/:itemId",
     controller: "LearnCtrl"
     templateUrl: "templates/learn.template.html"
-    resolve: 
+    resolve:
       # this should be anotated - minifying will be a disaster
-      verses: ($http, $stateParams) -> 
+      verses: ($http, $stateParams) ->
         $http.get("learn/#{$stateParams.itemId}.json")
   ).state("howto",
     url: "/howto/:itemId",

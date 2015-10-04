@@ -200,34 +200,39 @@ html {
   font-size: 2em;
 }
 
-
-
-html, body {
-  height: 100%;
+navbar.navbar-inverse.navbar-fixed-top {
+  padding-bottom: 15px;
 }
 
-body {
-  padding: 50px 0 0 0;
-}
 
-.navbar-toggle {
-  float: left;
-  margin-left: 15px;
-}
-
-@media (min-width: 0) {
-  .navbar-toggle {
-    display: block; /* force showing the toggle */
-  }
-}
-
-@media (min-width: 992px) {
-  body {
-    padding: 0;
-  }
-  .navbar {
-    right: auto;
-    background: none;
-    border: none;
-  }
+@media screen and (max-width: 9991px){
+    .navbar-collapse.collapse{
+        display: none!important;
+        height: 0!important;
+        padding-bottom: 0;
+        overflow: hidden!important;
+    }
+    .navbar-toggle.collapsed{
+        display:block!important;    
+    }
+    .navbar-toggle{
+        display:block!important;    
+    }
+    .navbar-collapse.collapse.in{
+        display:block!important;    
+        height:auto!important;
+        overflow:visible!important;
+    }
+    .navbar-nav>li,.navbar-header{
+        float:none; 
+    }
+    .navbar-default .navbar-toggle.collapsed{
+        background:#fff;    
+    }
+    body  {
+      padding-top: 30px;
+    }
+    .navbar-nav span,label {
+      color: white;
+    }
 }

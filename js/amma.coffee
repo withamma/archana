@@ -10,7 +10,7 @@ app.controller "ItemListerCtrl", ["$scope", "$http", ($scope, $http) ->
 
 app.constant "storageExpiration", 1416095403068
 
-app.controller "TestCtrl", ["$scope", '$stateParams', "$location", '$localStorage', 'hotkeys', 'History', 'storageExpiration', "verses", ($scope, $stateParams, $location, storage, hotkeys, history, storageExpiration, verses) ->
+app.controller "TestCtrl", ($scope, $stateParams, $location, storage, hotkeys, history, storageExpiration, verses) ->
   id = "#{$stateParams.itemId}"
   $scope.state = "loading"
   $scope.hint = false
@@ -173,105 +173,46 @@ app.controller "TestCtrl", ["$scope", '$stateParams', "$location", '$localStorag
         incorrect.pop()
       $scope.currentPosition -= 1
       $scope.state = "answer"
-]
+
 
 app.controller "HowtoCtrl", ["$scope", '$stateParams', ($scope, $stateParams) ->
   $scope.itemId = $stateParams.itemId
 ]
-# old
-  # app.controller "LearnCtrl", ["$scope", "$localStorage", "$stateParams", "$http",
-  # "hotkeys", "History", "mobile", "$location", "storageExpiration", "VerseHandler"
-  # ($scope, storage, $stateParams, $http, hotkeys, history, mobile, $location, storageExpiration, VerseHandler)->
-  #   debugger
-  #   $scope.bg = "img/feet.jpg"
-  #   $scope.mobile = mobile
-  #   $scope.currentPosition = 0
-  #   $scope.state = "show"
-  #   $scope.displayMeaning = false
-  #   createHistory = ->
-  #     colors = history.colors()
-  #   colors = {}
-  #   id = "#{$stateParams.itemId}"
-  #   if not storage[id]?
-  #     storage[id] = {}
-  #     storage[id]["currentPosition"] = 0
-  #     storage[id]["displayMeaning"] = false
-  #   $scope.home = ->
-  #     $location.path "/"
-
-  #   $scope.jumpTo = (location) ->
-  #     location= parseInt(location)
-  #     if location? and location < Object.keys($scope.listToLearn).length and location > 0
-  #       $scope.currentPosition = location - 1
-  #       $scope.isCollapsed=true
-  #       $scope.$apply()
-
-
-  #   if storage[id].listToLearn? and storage.lastUpdate? and storage.lastUpdate > storageExpiration
-  #     $scope.listToLearn = storage[id].listToLearn
-  #     $scope.listOfMeaning = storage[id].listOfMeaning
-  #     $scope.title = storage[id].title
-  #     $scope.state = "show"
-  #     colors = history.colors()
-  #   else
-  #     $http.get("learn/#{$stateParams.itemId}.json").success (data) ->
-  #       $scope.listToLearn = data.listToLearn
-  #       $scope.listOfMeaning = data.listOfMeaning
-  #       $scope.title = data.title
-  #       $scope.state = "show"
-  #       colors = history.colors()
-
-  #   $scope.getColor = ->
-  #     {
-  #       "background-color": if $scope.state is "show" then colors[$scope.currentPosition] else "#eee"
-  #     }
-
-  #   $scope.toggleMeaning = () ->
-  #     $scope.displayMeaning = !$scope.displayMeaning
-
-  #   $scope.verse = ->
-  #     $scope.listToLearn[$scope.currentPosition]
-  #   $scope.meaning = ->
-  #     $scope.listOfMeaning[$scope.currentPosition]
-
-  #   $scope.next = ($event)->
-  #     $event.stopPropagation()
-  #     $scope.currentPosition += 1
-  #     false
-
-  #   $scope.prev = ($event)->
-  #     $event.stopPropagation()
-  #     $scope.currentPosition -= 1
-  #     false
-
-  #   hotkeys.bindTo($scope)
-  #     .add({
-  #       combo: 'space'
-  #       description: 'Next'
-  #       callback: () -> $scope.next()
-  #     })
-  # ]
 
 app.controller "LearnCtrl", ($scope, VerseHandler, VerseLocalStorage, mobile, hotkeys, History, $location)->
+  # Init
+  
+
   $scope.bg = "img/feet.jpg"
   $scope.mobile = mobile
   $scope.displayMeaning = false
-  $scope.left = false
-  $scope.autoplay = ""
+  $scope.VerseHandler = VerseHandler
+  $scope.settings = {
+    layoutSide: "Right"
+    meaning: "Off"
+    audio: "On"
+    autoplay: "Off"
+    audioPlaybackRate: 1.0
+  }
+  $("audio")[0].playbackRate = $scope.settings.audioPlaybackRate
   $scope.state = "show"
-  $scope.toggleRightyMode = ->
-    $scope.left = !$scope.left
-
+  $scope.updateAudioSettings = ->
+    x = $("audio")[0]
+    x.defaultPlaybackRate = $scope.settings.audioPlaybackRate
+    x.autoplay = $scope.settings.autoplay is "On"
   storage = VerseLocalStorage.getState()
   VerseHandler.reload()
+  $scope.getPosition = ->
+    VerseHandler.getPosition()
 
+  $scope.setPosition = (t) ->
+    debugger
+
+  History.restore()
   colors = History.colors()
 
   toggle = (item, state1, state2) ->
     item = if item isnt state1 then state1 else state2
-
-  $scope.toggleAutoPlay = ->
-    toggle($scope.autoplay,"autoplay","")
 
   $scope.playAudio = ->
     x = $("audio")[0]
@@ -321,9 +262,7 @@ app.controller "LearnCtrl", ($scope, VerseHandler, VerseLocalStorage, mobile, ho
       callback: () -> $scope.next()
     })
 
-app.controller "ResultsCtrl", ["$scope", "$localStorage", '$stateParams',
-'$http','dateFilter',"$window", "History", ($scope, storage, $stateParams, $http,
-dateFilter, $window, history) ->
+app.controller "ResultsCtrl", ($scope, storage, $stateParams, $http, dateFilter, $window, history) ->
   $scope.id = $stateParams.itemId
   state = storage[$scope.id]
   $scope.buttonColor = "btn-primary"
@@ -359,4 +298,3 @@ dateFilter, $window, history) ->
 
   today = () ->
     dateFilter new Date(), "MMM dd yyyy"
-]

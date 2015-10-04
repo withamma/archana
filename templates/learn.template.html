@@ -1,109 +1,118 @@
 <div full-cover-image="img/feet.jpg" ng-hide="state === 'end'"
-  ng-swipe-left="next($event);" ng-swipe-right="prev($event);" ng-click="console.log('sup')"></div>
-<!-- <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" ng-init="isCollapsed = true"
-                    ng-click="isCollapsed = !isCollapsed">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div class="collapse navbar-collapse" collapse="isCollapsed" ng-class="!isCollapsed && 'in'" >
-            <ul class="nav navbar-nav" ng-click="isCollapsed=true" >
-                <li>
-                <a ng-click="home()">{{title}}</a>
-                </li>
+ng-swipe-left="next($event);" ng-swipe-right="prev($event);" ng-click="next($event);">
+</div>
 
-                <li ng-if="!mobile">
-                    <a ng-click="left=!left">Toggle Righty mode</a>
-                </li>
-                <li>
-                    <a ng-click="toggleMeaning()">Toggle Meaning</a>
-                </li>
-              </ul>
-              <form class="navbar-form navbar-left" role="search"
-                ng-submit="jumpTo(jumpto)">
-                <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Jump to
-                  #" ng-model="jumpto">
-                </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-              </form>
-
-        </div>
-    </div>
-</div> -->
-    <div class="navmenu navmenu-default navmenu-fixed-left offcanvas">
-      <a class="navmenu-brand" ng-click="home()">{{title()}}</a>
-      <ul class="nav navmenu-nav">
-        <li ng-if="!mobile">
-          <a ng-click="toggleRightyMode()">Toggle Righty mode</a>
-        </li>
-        <li>
-          <a ng-click="toggleMeaning()">Toggle Meaning</a>
-        </li>
-        <li>
-          <a ng-click="toggleAutoPlay()">Autoplay Audio</a>
-        </li>
-        <li>
-          <div class="checkbox checkbox-slider--c-weight checkbox-slider-lg">
-            <label>
-              <input type="checkbox" checked=""><span>checked</span>
-            </label>
-          </div>
-
-        </li>
-
-      </ul>
-
-    </div>
-
-    <div class="navbar navbar-default navbar-fixed-top" >
-      <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target=".navmenu" data-canvas="body" >
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container">
+    <a class="navbar-brand" ng-click="home()">
+      <span class="glyphicon glyphicon-home"></span>
+    </a>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">
+        <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
     </div>
+    <div class="collapse navbar-collapse" collapse="isCollapsed" ng-class="!isCollapsed && 'in'" >
+      <ul class="nav navbar-nav" >
+
+      <div class="container" >
+        <div class="row-fluid">
+          <div class="col-md-4">
+            <input class="btn btn-danger" type="reset" value="Reset" ng-click="VerseHandler.state.currentPosition = 0">
+          </div>
+          
+        </div>
+        <div class="row-fluid">
+          <div class="col-md-6">
+            <div class="checkbox checkbox-slider--c checkbox-slider-lg">
+              <label ng-if="!mobile">
+                <input type="checkbox" ng-model="settings.layoutSide" ng-true-value="'Right'" ng-false-value="'Left'"><span>{{settings.layoutSide}} Handed</span>
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="checkbox checkbox-slider--c-weight checkbox-slider-lg">
+              <label>
+                <input type="checkbox" ng-model="settings.meaning" ng-true-value="'On'" ng-false-value="'Off'"><span>Meaning {{settings.meaning}}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="row-fluid">
+          <div class="col-md-6">
+            <div class="checkbox checkbox-slider--c-weight checkbox-slider-lg">
+              <label>
+                <input type="checkbox" ng-model="settings.audio" ng-true-value="'On'" ng-false-value="'Off'" ><span>Audio Controls {{settings.audio}}</span>
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="checkbox checkbox-slider--c-weight checkbox-slider-lg">
+              <label>
+                <input type="checkbox" ng-model="settings.autoplay" ng-true-value="'On'" ng-false-value="'Off'" ng-change="updateAudioSettings()"><span>Autoplay Audio {{settings.autoplay}}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row-fluid"> 
+          <div class="col-md-6">
+            <label>Audio Playback rate</label>
+            <input type="number" max="3" min="0.3" step=".1" value="{{settings.audioPlaybackRate}}" ng-model="settings.audioPlaybackRate">    
+          </div>
+        </div>
+        <div class="row-fluid"> 
+          <div class="col-md-6">
+            <label>Position</label>
+            <!-- dangerous - better to set watch -->
+            <input type="number" ng-model="VerseHandler.state.currentPosition" >    
+          </div>
+        </div> 
+      </ul>
+    </div>
+  </div>
+</div>
 
 <div ng-swipe-left="next($event);" ng-swipe-right="prev($event);" ng-click="next($event);" class="fluid-row clearfix" >
   <div class="col-xs-12">
     <div class="text-center answer" >
       <h3 ng-style="getColor()" ng-bind-html="verse()" ></h3>
-      <h4 ng-if="displayMeaning === true" ng-bind-html="meaning()"></h4>
+      <h4 ng-if="settings.meaning == 'On'" ng-bind-html="meaning()"></h4>
     </div>
   </div>
 </div>
-<audio id="verseAudio" ng-src="{{getAudioSegmentSrc()}}" preload="auto" {{autoplay}}></audio>
-<!-- Answer Buttons -->
-<div class="fluid-row clearfix above-fixed-footer" >
-  <div class="col-xs-6" ng-if="state === 'show'">
-    <button type="button" class="btn btn-lg btn-outline" ng-click="playAudio()">Play</button>
-  </div>
 
-</div>
+<audio id="verseAudio" ng-src="{{getAudioSegmentSrc()}}"  ></audio>
 
-<div class="fluid-row clearfix fixed-footer" >
-  <div ng-if="!mobile">
-    <div ng-if="!left">
-      <div class="col-xs-6" ng-if="state === 'show'">
-          <button type="button" class="btn btn-lg btn-outline" ng-click="next($event);">Next</button>
+<div class="fluid-row clearfix fixed-footer" ng-if="!mobile || settings.audio == 'On'">
+  <div ng-if="!mobile" ng-swipe-left="next($event);" ng-swipe-right="prev($event);" ng-click="next($event);">
+    <div ng-if="settings.layoutSide == 'Left'">
+      <div class="col-xs-{{ (settings.audio == 'On') ? '4' : '6' }}">
+        <button type="button" class="btn btn-lg btn-outline" ng-click="next($event);">Next</button>
       </div>
-      <div class="col-xs-6" ng-if="state === 'show'">
-          <button type="button" class="btn btn-lg btn-outline" ng-click="prev($event);">Back</button>
+      <div class="col-xs-4" ng-if="settings.audio == 'On'">
+        <button type="button" class="btn btn-lg btn-outline" ng-click="playAudio($event)">Play</button>
+      </div>
+      <div class="col-xs-{{ (settings.audio == 'On') ? '4' : '6' }}">
+        <button type="button" class="btn btn-lg btn-outline" ng-click="prev($event);">Back</button>
       </div>
     </div>
-    <div ng-if="left">
-      <div class="col-xs-6" ng-if="state === 'show'">
-          <button type="button" class="btn btn-lg btn-outline" ng-click="prev($event);">Back</button>
+    <div ng-if="settings.layoutSide == 'Right'">
+      <div class="col-xs-{{ (settings.audio == 'On') ? '4' : '6' }}">
+        <button type="button" class="btn btn-lg btn-outline" ng-click="prev($event);">Back</button>
       </div>
-      <div class="col-xs-6" ng-if="state === 'show'">
-          <button type="button" class="btn btn-lg btn-outline" ng-click="next($event);">Next</button>
+      <div class="col-xs-4" ng-if="settings.audio == 'On'">
+        <button type="button" class="btn btn-lg btn-outline" ng-click="playAudio($event)">Play</button>
+      </div>
+      <div class="col-xs-{{ (settings.audio == 'On') ? '4' : '6' }}">
+        <button type="button" class="btn btn-lg btn-outline" ng-click="next($event);">Next</button>
       </div>
     </div>
   </div>
-
+  <div class="col-xs-12" ng-if="mobile && settings.audio == 'On'" >
+    <button type="button" class="btn btn-lg btn-outline" ng-click="playAudio($event)">Play</button>
+  </div>
 </div>

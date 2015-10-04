@@ -60,10 +60,10 @@ gulp.task "minifyJS", ["html"], ->
   gulp.src(["#{baseDest}lib.js"])
     .pipe(gulpif(isProd, uglify()))
     .pipe(gulp.dest(baseDest))
-# very bad idea to cache audio here as code changes frequently and busts cache, use indexed db
 gulp.task "manifest", ["html", "images", "json", "templates"], ->
   gulp.src([
     "#{baseDest}**/*"
+    "!#{baseDest}/audio/*"
   ]).pipe(manifest(
     timestamp: true
     network: [

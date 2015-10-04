@@ -1,6 +1,9 @@
 *.swp
+*.map
 node_modules/*
 bower_components/
-dist/*
+dist/
 .idea/*
 tmp/*
+js/*.js
+build/*.js
