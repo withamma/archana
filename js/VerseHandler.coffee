@@ -1,16 +1,25 @@
-app.service "VerseHandler", (LocalVerseData, VerseLocalStorage) ->
+app.service "VerseHandler", (LocalVerseData, VerseLocalStorage, $q) ->
   # localStorage used to store the position
+  audioDefered = undefined
   @reload = ->
+    audioDefered = $q.defer()
     LocalVerseData.reload()
+    @state = VerseLocalStorage.getState()
+    @state.currentPosition = 0 if not @state.currentPosition?
     LocalVerseData.verses.then (data) =>
       @verses = data.listToLearn
       @meanings = data.listOfMeaning
       @title = data.title
       @max = Object.keys(@verses).length - 1
-      @audioURL = if data.audioURL then data.audioURL + "#t=" else  undefined
+      @audioURL = data.audioURL
+      # @audioURL = if data.audioURL then data.audioURL + "#t=" else null
+      audioDefered.resolve( data.audioURL isnt undefined )
       @audioTimes = data.audioTimes
-    @state = VerseLocalStorage.getState()
-    @state.currentPosition = 0 if not @state.currentPosition?
+      @state.currentPosition = 0 if @state.currentPosition == @max
+      return
+
+  @hasAudio = ->
+    audioDefered.promise
 
   @hasNext = ->
     if @state.currentPosition < @max then true else false
@@ -37,6 +46,9 @@ app.service "VerseHandler", (LocalVerseData, VerseLocalStorage) ->
     if @audioURL
       time = @audioTimes[@state.currentPosition]
       @audioURL + time
+
+  @getAudioSegmentTimes = ->
+    @audioTimes[@state.currentPosition].split(",")
 
   @peekNextVerse = ->
     @verses[@state.currentPosition+1] if @hasNext()

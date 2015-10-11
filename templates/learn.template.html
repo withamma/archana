@@ -8,7 +8,7 @@ ng-swipe-left="next($event);" ng-swipe-right="prev($event);" ng-click="next($eve
       <span class="glyphicon glyphicon-home"></span>
     </a>
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">
+      <button type="button" class="navbar-toggle" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed; fixSlider()">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -19,21 +19,21 @@ ng-swipe-left="next($event);" ng-swipe-right="prev($event);" ng-click="next($eve
       <ul class="nav navbar-nav" >
 
       <div class="container" >
-        <div class="row-fluid">
-          <div class="col-md-4">
-            <input class="btn btn-danger" type="reset" value="Reset" ng-click="VerseHandler.state.currentPosition = 0">
-          </div>
+        <div class="row-fluid clearfix">
+          <!-- <div class="col-md-4"> -->
+            <input class="btn btn-danger" type="reset" value="Restart" ng-click="VerseHandler.state.currentPosition = 0">
+          <!-- </div> -->
           
         </div>
-        <div class="row-fluid">
-          <div class="col-md-6">
+        <div class="row-fluid clearfix">
+          <div class="col-sm-6">
             <div class="checkbox checkbox-slider--c checkbox-slider-lg">
               <label ng-if="!mobile">
                 <input type="checkbox" ng-model="settings.layoutSide" ng-true-value="'Right'" ng-false-value="'Left'"><span>{{settings.layoutSide}} Handed</span>
               </label>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-sm-6">
             <div class="checkbox checkbox-slider--c-weight checkbox-slider-lg">
               <label>
                 <input type="checkbox" ng-model="settings.meaning" ng-true-value="'On'" ng-false-value="'Off'"><span>Meaning {{settings.meaning}}</span>
@@ -41,34 +41,39 @@ ng-swipe-left="next($event);" ng-swipe-right="prev($event);" ng-click="next($eve
             </div>
           </div>
         </div>
-        <div class="row-fluid">
-          <div class="col-md-6">
-            <div class="checkbox checkbox-slider--c-weight checkbox-slider-lg">
-              <label>
-                <input type="checkbox" ng-model="settings.audio" ng-true-value="'On'" ng-false-value="'Off'" ><span>Audio Controls {{settings.audio}}</span>
-              </label>
+        <div ng-if="settings.hasAudio">
+          <div class="row-fluid clearfix" >
+            <div class="col-sm-6">
+              <div class="checkbox checkbox-slider--c-weight checkbox-slider-lg">
+                <label>
+                  <input type="checkbox" ng-model="settings.audio" ng-true-value="'On'" ng-false-value="'Off'" ><span>Audio Controls {{settings.audio}}</span>
+                </label>
+              </div>
             </div>
-          </div>
-          <div class="col-md-6">
-            <div class="checkbox checkbox-slider--c-weight checkbox-slider-lg">
-              <label>
-                <input type="checkbox" ng-model="settings.autoplay" ng-true-value="'On'" ng-false-value="'Off'" ng-change="updateAudioSettings()"><span>Autoplay Audio {{settings.autoplay}}</span>
-              </label>
+            <div class="col-sm-6">
+              <div class="checkbox checkbox-slider--c-weight checkbox-slider-lg">
+                <label>
+                  <input type="checkbox" ng-model="settings.autoplay" ng-true-value="'On'" ng-false-value="'Off'" ng-change="updateAudioSettings()"><span>Autoplay Audio {{settings.autoplay}}</span>
+                </label>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="row-fluid"> 
-          <div class="col-md-6">
+        <div class="row-fluid clearfix"> 
+          <div class="col-sm-6" ng-if="settings.hasAudio">
             <label>Audio Playback rate</label>
-            <input type="number" max="3" min="0.3" step=".1" value="{{settings.audioPlaybackRate}}" ng-model="settings.audioPlaybackRate">    
+            <input type="number" max="3" min="0.3" step=".1" value="{{settings.audioPlaybackRate}}" ng-model="settings.audioPlaybackRate" ng-change="updateAudioSettings()">
+            <rzslider rz-slider-model="settings.audioPlaybackRate" rz-slider-ceil="3" rz-slider-floor=".4" rz-slider-step=".1" rz-slider-precision="1"></rzslider>
           </div>
         </div>
         <div class="row-fluid"> 
-          <div class="col-md-6">
+          <div class="col-sm-6">
             <label>Position</label>
             <!-- dangerous - better to set watch -->
-            <input type="number" ng-model="VerseHandler.state.currentPosition" >    
+            <input type="number" ng-model="VerseHandler.state.currentPosition" >
+            <rzslider rz-slider-model="VerseHandler.state.currentPosition" rz-slider-ceil="VerseHandler.max" rz-slider-floor="0" rz-slider-step="1"></rzslider>
+
           </div>
         </div> 
       </ul>
@@ -85,7 +90,7 @@ ng-swipe-left="next($event);" ng-swipe-right="prev($event);" ng-click="next($eve
   </div>
 </div>
 
-<audio id="verseAudio" ng-src="{{getAudioSegmentSrc()}}"  ></audio>
+<audio id="audioPlayer" ng-src="{{VerseHandler.audioURL}}" ></audio>
 
 <div class="fluid-row clearfix fixed-footer" ng-if="!mobile || settings.audio == 'On'">
   <div ng-if="!mobile" ng-swipe-left="next($event);" ng-swipe-right="prev($event);" ng-click="next($event);">

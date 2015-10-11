@@ -179,62 +179,73 @@ app.controller "HowtoCtrl", ["$scope", '$stateParams', ($scope, $stateParams) ->
   $scope.itemId = $stateParams.itemId
 ]
 
-app.controller "LearnCtrl", ($scope, VerseHandler, VerseLocalStorage, mobile, hotkeys, History, $location)->
-  # Init
-  
-
-  $scope.bg = "img/feet.jpg"
-  $scope.mobile = mobile
-  $scope.displayMeaning = false
-  $scope.VerseHandler = VerseHandler
-  $scope.settings = {
+app.controller "LearnCtrl", ($scope, VerseHandler, VerseLocalStorage, mobile, hotkeys, History, $location, $rootScope)->
+  defaults = 
+    audioPlaybackRate: 1
     layoutSide: "Right"
+    autoplay: "Off"
     meaning: "Off"
     audio: "On"
-    autoplay: "Off"
-    audioPlaybackRate: 1.0
-  }
-  $("audio")[0].playbackRate = $scope.settings.audioPlaybackRate
-  $scope.state = "show"
-  $scope.updateAudioSettings = ->
-    x = $("audio")[0]
-    x.defaultPlaybackRate = $scope.settings.audioPlaybackRate
-    x.autoplay = $scope.settings.autoplay is "On"
-  storage = VerseLocalStorage.getState()
-  VerseHandler.reload()
-  $scope.getPosition = ->
-    VerseHandler.getPosition()
+    hasAudio: true
+  $scope.settings = {}
+  audio = $("#audioPlayer")[0]
+  audioTimeout = undefined
 
-  $scope.setPosition = (t) ->
-    debugger
+  storage = VerseLocalStorage.getState()
+  for k,v of defaults
+    storage[k] = storage[k] ? v
+    $scope.settings[k] = storage[k]
+
+  VerseHandler.reload()
+  $scope.VerseHandler = VerseHandler
+  VerseHandler.hasAudio().then (hasAudio)->
+    storage.hasAudio = hasAudio
+    $scope.settings.hasAudio = hasAudio
+    $scope.settings.audio = if hasAudio then "On" else "Off"
+    audio.load() if hasAudio
 
   History.restore()
   colors = History.colors()
 
-  toggle = (item, state1, state2) ->
-    item = if item isnt state1 then state1 else state2
+  $scope.bg = "img/feet.jpg"
+  $scope.mobile = mobile
+  audio.defaultPlaybackRate = $scope.settings.audioPlaybackRate
+  $scope.updateAudioSettings = ->
+    audio.defaultPlaybackRate = $scope.settings.audioPlaybackRate
 
-  $scope.playAudio = ->
-    x = $("audio")[0]
-    x.load() # this is so it plays from the right spot
-    x.play()
+  resetAudio = ->
+    if !audio.paused
+      clearTimeout(audioTimeout)
+      audio.pause()
+    return
+
+  $scope.playAudio = ($event)->
+    audio = $("#audioPlayer")[0]
+
+    $event.stopPropagation()
+    resetAudio()
+    [start, stop] = VerseHandler.getAudioSegmentTimes()
+    [start, stop] = [parseFloat(start), parseFloat(stop)]
+    audio.currentTime = start
+    audio.play()
+    audioTimeout = setTimeout(-> 
+        audio.pause()
+        return
+      ,(stop-start) / audio.defaultPlaybackRate * 1000)
+    false
 
   $scope.home = ->
     $location.path "/"
 
-  $scope.jumpTo = (location) ->
-    location= parseInt(location)
-    VerseHandler.setPosition(location)
-    $scope.isCollapsed=true
+  $scope.fixSlider = ->
+    # this timeout is to make sure that the menu is opened
+    setTimeout ->
+        $rootScope.$broadcast("rzSliderForceRender")
+      , 200
+    true
 
   $scope.getColor = ->
-    {
-      "background-color": if $scope.state is "show" then colors[VerseHandler.currentPosition] else "#eee"
-    }
-
-  $scope.toggleMeaning = () ->
-    $scope.displayMeaning = !$scope.displayMeaning
-
+    "background-color": colors[VerseHandler.state.currentPosition]
   $scope.title = ->
     VerseHandler.getTitle()
   $scope.verse = ->
@@ -244,12 +255,16 @@ app.controller "LearnCtrl", ($scope, VerseHandler, VerseLocalStorage, mobile, ho
 
   $scope.next = ($event)->
     $event.stopPropagation()
+    resetAudio()
     VerseHandler.next()
+    $scope.playAudio($event) if $scope.settings.autoplay is "On"
     false
 
   $scope.prev = ($event)->
     $event.stopPropagation()
+    resetAudio()
     VerseHandler.prev()
+    $scope.playAudio($event) if $scope.settings.autoplay is "On"
     false
 
   $scope.getAudioSegmentSrc = ()->

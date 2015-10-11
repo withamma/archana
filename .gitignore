@@ -7,3 +7,4 @@ dist/
 tmp/*
 js/*.js
 build/*.js
+.js/

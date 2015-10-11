@@ -35,7 +35,7 @@ if gutil.env._[0] is "prod"
 
 gulp.task "default", ["build"]
 
-gulp.task "build", ["coffee", "manifest", "minifyCSS", "minifyJS"]
+gulp.task "build", ["fonts", "coffee", "manifest", "minifyCSS", "minifyJS"]
 
 # You only need to do this once
 gulp.task "stage", ->
@@ -56,11 +56,15 @@ gulp.task "minifyCSS", ["html"], ->
     .pipe(gulpif(isProd, minifyCSS()))
     .pipe(gulp.dest(baseDest))
 
+gulp.task "fonts", ->
+  gulp.src(["bower_components/bootstrap/dist/fonts/*"])
+    .pipe(gulp.dest(baseDest + "fonts"))
+
 gulp.task "minifyJS", ["html"], ->
   gulp.src(["#{baseDest}lib.js"])
     .pipe(gulpif(isProd, uglify()))
     .pipe(gulp.dest(baseDest))
-gulp.task "manifest", ["html", "images", "json", "templates"], ->
+gulp.task "manifest", ["html", "images", "json", "templates", "fonts"], ->
   gulp.src([
     "#{baseDest}**/*"
     "!#{baseDest}/audio/*"
