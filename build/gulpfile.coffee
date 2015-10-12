@@ -35,7 +35,7 @@ if gutil.env._[0] is "prod"
 
 gulp.task "default", ["build"]
 
-gulp.task "build", ["fonts", "coffee", "manifest", "minifyCSS", "minifyJS"]
+gulp.task "build", ["fonts", "coffee", "manifest", "minifyCSS", "minifyJS", "audio"]
 
 # You only need to do this once
 gulp.task "stage", ->
@@ -64,10 +64,10 @@ gulp.task "minifyJS", ["html"], ->
   gulp.src(["#{baseDest}lib.js"])
     .pipe(gulpif(isProd, uglify()))
     .pipe(gulp.dest(baseDest))
-gulp.task "manifest", ["html", "images", "json", "templates", "fonts"], ->
+gulp.task "manifest", ["audio","html", "images", "json", "templates", "fonts"], ->
   gulp.src([
     "#{baseDest}**/*"
-    "!#{baseDest}/audio/*"
+    # "!#{baseDest}/audio/*"
   ]).pipe(manifest(
     timestamp: true
     network: [

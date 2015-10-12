@@ -21,18 +21,10 @@ app.config ["$stateProvider", "$urlRouterProvider", ($stateProvider, $urlRouterP
     url: "/test/:itemId",
     controller: "TestCtrl"
     templateUrl: "templates/test.template.html"
-    resolve:
-      # this should be anotated - minifying will be a disaster
-      verses: ($http, $stateParams) ->
-        $http.get("learn/#{$stateParams.itemId}.json")
   ).state("learn",
     url: "/learn/:itemId",
     controller: "LearnCtrl"
     templateUrl: "templates/learn.template.html"
-    resolve:
-      # this should be anotated - minifying will be a disaster
-      verses: ($http, $stateParams) ->
-        $http.get("learn/#{$stateParams.itemId}.json")
   ).state("howto",
     url: "/howto/:itemId",
     controller: "HowtoCtrl"
